@@ -51,11 +51,6 @@ namespace UML_class_diagram.Classes {
             if (selected)
                 g.DrawRectangle(Pens.DarkViolet, tempPoint.X, tempPoint.Y, width, height + 2);
 
-
-
-
-
-
             if (this.Properties.Count != 0) {
                 g.DrawLine(Pens.Gray, tempPoint.X, tempPoint.Y + offset.Height, tempPoint.X + width - 1, tempPoint.Y + offset.Height);
 
