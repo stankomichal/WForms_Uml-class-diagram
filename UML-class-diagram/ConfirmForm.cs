@@ -12,6 +12,8 @@ namespace UML_class_diagram {
     public partial class ConfirmForm : Form {
         public ConfirmForm(string question) {
             InitializeComponent();
+
+            // Text to be displayed to user
             this.label_Question.Text = question;
         }
 

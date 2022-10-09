@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace UML_class_diagram {
     public partial class FunctionForm : Form {
-        public string Function { get; set; }
+        public string Function { get; set; } // Function so we can access it from Form1
         public FunctionForm(string function) {
             InitializeComponent();
 

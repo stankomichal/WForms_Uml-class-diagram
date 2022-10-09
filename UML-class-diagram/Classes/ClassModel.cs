@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,33 +9,27 @@ using System.Xml.Linq;
 
 namespace UML_class_diagram.Classes {
     public class ClassModel {
-        // Name of class
-        public string ClassName { get; set; }
-        // List of all Properties
-        public BindingList<string> Properties { get; set; }
-        // List of all Functions
-        public BindingList<string> Functions { get; set; }
-        // Is it abstract
-        public bool IsAbstract { get; set; }
 
-        // Left top point for draw
-        public Point LeftTop;
-        // Width of class container - counted when redraw
-        private int width;
-        private int height;
-        // Diagram settings for colors and fonts
-        private DiagramSettings diagramSettings = DiagramSettings.GetInstance();
-        // Is this class selected - for changing background
-        public bool selected = true;
-        // Height of font for drawing each line
-        private int fontHeight;
+        public string ClassName { get; set; } // Name of class
+        public List<string> Properties { get; set; } // List of all Properties
+        public List<string> Functions { get; set; } // List of all Functions
+        public bool IsAbstract { get; set; } // Is it abstract
 
+
+        public Point LeftTop; // Left top point for draw
+        private int width; // Width of class container - counted when redraw
+        private int height; // Height of class container - counted when redraw
+        public bool selected = true; // Is this class selected - for changing background
+
+        private DiagramSettings diagramSettings = DiagramSettings.GetInstance(); // Diagram settings for colors and fonts
         public ClassModel(string className) {
+            // Set properties
             this.ClassName = className;
             this.Properties = new();
             this.Functions = new();
             this.IsAbstract = false;
 
+            // Testing
             this.Properties.Add("+ asd : string");
             this.Properties.Add("- asd: string");
             this.Properties.Add("+ asd:string");
@@ -43,16 +38,22 @@ namespace UML_class_diagram.Classes {
             this.Functions.Add("+ asd() : void");
             this.Functions.Add("-asdasd(test : int) : int");
             this.Functions.Add("-asdasd(test : int, asd : bool, test : array):bool");
+            // /Testing
 
-            LeftTop = new Point(10, 10);
+            // Starting position of the class container
+            this.LeftTop = new Point(10, 10);
+            // Get instance of diagram settings
+            this.diagramSettings = DiagramSettings.GetInstance();
         }
         public void Draw(Graphics g) {
             // Measure height of the font
-            fontHeight = g.MeasureString(this.ClassName, diagramSettings.ClassFont).ToSize().Height;
+            int fontHeight = g.MeasureString(this.ClassName, diagramSettings.ClassFont).ToSize().Height;
             // Measure width of the longest string
-            width = LongestWorldSize(g);
+            int tempWidth = LongestWorldSize(g);
+            width = tempWidth < 120 ? 120 : tempWidth;
+            Debug.WriteLine(tempWidth);
             // Measure height with font Height and number of lines
-            height = this.fontHeight * (1 + this.Properties.Count + this.Functions.Count);
+            height = fontHeight * (1 + this.Properties.Count + this.Functions.Count);
             // Temporary point to have point where to draw
             Point tempPoint = LeftTop;
             // Find position X to middle class name
@@ -72,7 +73,7 @@ namespace UML_class_diagram.Classes {
 
                 // Draw all properties
                 foreach (string item in this.Properties) {
-                    tempPoint.Y += this.fontHeight;
+                    tempPoint.Y += fontHeight;
                     g.DrawString(item, diagramSettings.ClassFont, diagramSettings.FontColor, tempPoint);
                 }
             }
@@ -83,33 +84,34 @@ namespace UML_class_diagram.Classes {
 
                 // Draw all functions
                 foreach (string item in this.Functions) {
-                    tempPoint.Y += this.fontHeight;
+                    tempPoint.Y += fontHeight;
                     g.DrawString(item, diagramSettings.ClassFont, diagramSettings.FontColor, tempPoint);
                 }
             }
-
-
+            g.DrawImage(UML_class_diagram.Properties.Resources.trash, LeftTop.X, LeftTop.Y, 20, 20);
         }
         // Method to find if cursor position is inside class container
         public bool SelectMe(int x, int y) => (x >= LeftTop.X && x <= LeftTop.X + width) && (y >= LeftTop.Y && y <= LeftTop.Y + height);
         private int LongestWorldSize(Graphics g) {
             int size = g.MeasureString(this.ClassName, diagramSettings.ClassFont).ToSize().Width;
 
+            // Find longest size from all properties
             foreach (string prop in this.Properties) {
                 int temp = g.MeasureString(prop, diagramSettings.ClassFont).ToSize().Width;
                 if (temp > size)
                     size = temp;
             }
-            foreach (string method in this.Functions) {
-                int temp = g.MeasureString(method, diagramSettings.ClassFont).ToSize().Width;
+            // Find longest size from all functions
+            foreach (string func in this.Functions) {
+                int temp = g.MeasureString(func, diagramSettings.ClassFont).ToSize().Width;
                 if (temp > size)
                     size = temp;
             }
             return size;
         }
 
-        // Method to move LeftTop point by "x" and "y" offset
-        public bool ChangeStartPoint(int x, int y, int width, int height) {
+        // Method to move LeftTop point by "x" and "y" offset and return if we can move or not
+        public bool MoveStartPoint(int x, int y, int width, int height) {
             if ((this.LeftTop.X + x) < 0)
                 return false;
             if ((this.LeftTop.Y + y) < 0)

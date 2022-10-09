@@ -4,13 +4,13 @@ using UML_class_diagram.Classes;
 
 namespace UML_class_diagram {
     public partial class Form1 : Form {
-        public Diagram Diagram { get; set; }
+        public Diagram Diagram { get; set; } // Instance if diagram
 
-        private int mouseX;
-        private int mouseY;
+        private int mouseX; // X position of mouse when we clicked and moved
+        private int mouseY; // Y position of mouse when we clicked and moved
 
-        private bool isDraging;
-        private bool isChanged;
+        private bool isDragging; // Is user dragging class
+        private bool isChanged; // If user changed anything in sidebar
         public Form1() {
             InitializeComponent();
             // Create diagram
@@ -47,6 +47,8 @@ namespace UML_class_diagram {
             FillPanel();
             // Invalidate picturebox to redraw it
             this.pictureBox_Editor.Invalidate();
+            // Set isChanged to false bcs of filling sidebar - changing values
+            isChanged = false;
         }
         // Button to import
         private void button_Import_Click(object sender, EventArgs e) {
@@ -58,6 +60,7 @@ namespace UML_class_diagram {
         }
 
         #region MouseHandle
+        // Called first frame when user clicked inside of the paintbox
         private void pictureBox_Editor_MouseDown(object sender, MouseEventArgs e) {
             // If clicked button is not left - return
             if (e.Button != MouseButtons.Left)
@@ -79,134 +82,195 @@ namespace UML_class_diagram {
             }
             // Find selected
             if (this.Diagram.CheckSelect(e.X, e.Y)) {
-                // set mouse positions for later use in moveMouse
+                // Set mouse positions for later use in moveMouse
                 mouseX = e.X;
                 mouseY = e.Y;
-                isDraging = true;
+                // Set dragging to true
+                this.isDragging = true;
+                // Make sidebar visible
                 this.panel_ClassProperties.Visible = true;
+                // Fill sidebar with informations of selected class
                 FillPanel();
+                // Set isChanged to false bcs of filling sidebar - changing values
                 isChanged = false;
             }
+            // Redraw picturebox
             this.pictureBox_Editor.Invalidate();
         }
+        // Called everytime user moved cursor inside of the paintbox
         private void pictureBox_Editor_MouseMove(object sender, MouseEventArgs e) {
-            if (!isDraging || e.Button != MouseButtons.Left)
+            // If clicked button is not left - return
+            // If user is not dragging - return
+            if (!this.isDragging || e.Button != MouseButtons.Left)
                 return;
 
+            // Get offset of cursor movement
             int offsetX = e.X - mouseX;
             int offsetY = e.Y - mouseY;
 
-            if (!this.Diagram.CurrentlySelectedClass.ChangeStartPoint(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
+            // Call move method on selected class
+            if (!this.Diagram.CurrentlySelectedClass.MoveStartPoint(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
 
                 //Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y);
                 //return;
             }
-
+            // Set cursor positions
             mouseX += offsetX;
             mouseY += offsetY;
+            // Redraw
             this.pictureBox_Editor.Invalidate();
         }
+        // Called first frame when user release mouse
         private void pictureBox_Editor_MouseUp(object sender, MouseEventArgs e) {
-            if (!isDraging || e.Button != MouseButtons.Left)
+            // If clicked button is not left - return
+            // If user is not dragging - return
+            if (!this.isDragging || e.Button != MouseButtons.Left)
                 return;
-            isDraging = false;
+
+            // Set dragging to false
+            this.isDragging = false;
         }
         #endregion
+        // Called when picture box is needed to be repainted
         private void pictureBox_Editor_Paint(object sender, PaintEventArgs e) {
+            // Redraw
             this.Diagram.Draw(e.Graphics);
         }
-
+        // Method to fill our sidebar
         private void FillPanel() {
-
-
+            // Make sure that we dont have null reference on currect selected class
             if (this.Diagram.CurrentlySelectedClass == null)
                 return;
 
+            // Set class name textbox to selected class name
             this.textBox_ClassName.Text = this.Diagram.CurrentlySelectedClass.ClassName;
 
+            // Clear lists so we have empty lists that we use will fill
             this.listBox_Props.Items.Clear();
             this.listBox_Funcs.Items.Clear();
+
+            // If class is abstract - check checkbox
             this.checkBox_Abstract.Checked = this.Diagram.CurrentlySelectedClass.IsAbstract;
-            foreach (var item in this.Diagram.CurrentlySelectedClass.Properties) {
+
+            // Fill Properties list with items in selected class properties
+            foreach (var item in this.Diagram.CurrentlySelectedClass.Properties)
                 this.listBox_Props.Items.Add(item);
-            }
-            foreach (var item in this.Diagram.CurrentlySelectedClass.Functions) {
+            // Fill Functions list with items in selected class functions
+            foreach (var item in this.Diagram.CurrentlySelectedClass.Functions)
                 this.listBox_Funcs.Items.Add(item);
-            }
+
+            // This is not reference, we fill both lists so our changes are not immediately written to our selected class
         }
 
         #region Properties
+        // Add new property to list
         private void button_AddProperty_Click(object sender, EventArgs e) {
+            // Create new PropertyForm with empty string
             PropertyForm form = new PropertyForm("");
             if (form.ShowDialog() == DialogResult.OK) {
+                // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
+                // Add our property from PropertyForm to our listbox of properties
                 this.listBox_Props.Items.Add(form.Property);
             }
         }
+        // Edit selected property
         private void button_EditProperty_Click(object sender, EventArgs e) {
+            // If we dont have anything selected - return
             if (this.listBox_Props.SelectedIndex == -1)
                 return;
 
+            // Create new PropertyForm with selected property
             PropertyForm form = new PropertyForm(this.listBox_Props.SelectedItem.ToString());
             if (form.ShowDialog() == DialogResult.OK) {
+                // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
+                // Change our property to new edited property from PropertyForm
                 this.listBox_Props.Items[this.listBox_Props.SelectedIndex] = form.Property;
             }
         }
+        // Delete selected property
         private void button_DeleteProperty_Click(object sender, EventArgs e) {
+            // If we dont have anything selected - return
             if (this.listBox_Props.SelectedIndex == -1)
                 return;
 
+            // Remove selected property
             this.listBox_Props.Items.RemoveAt(this.listBox_Props.SelectedIndex);
+            // Set is Changed to true, bcs we changed that list
             isChanged = true;
         }
         #endregion
 
         #region Functions
+        // Add new function to list
         private void button_AddFunc_Click(object sender, EventArgs e) {
+            // Create new FunctionForm with empty string
             FunctionForm form = new FunctionForm("");
             if (form.ShowDialog() == DialogResult.OK) {
+                // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
+                // Add our function from FunctionForm to our listbox of functions
                 this.listBox_Funcs.Items.Add(form.Function);
             }
         }
-
+        // Edit selected property
         private void button_EditFunc_Click(object sender, EventArgs e) {
+            // If we dont have anything selected - return
             if (this.listBox_Funcs.SelectedIndex == -1)
                 return;
 
+            // Create new FunctionForm with selected function
             FunctionForm form = new FunctionForm(this.listBox_Funcs.SelectedItem.ToString());
             if (form.ShowDialog() == DialogResult.OK) {
+                // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
+                // Change our function to new edited function from FunctionForm
                 this.listBox_Funcs.Items[this.listBox_Funcs.SelectedIndex] = form.Function;
             }
         }
+        // Delete selected property
         private void button_DeleteFunc_Click(object sender, EventArgs e) {
+            // If we dont have anything selected - return
             if (this.listBox_Funcs.SelectedIndex == -1)
                 return;
-
+            // Remove selected function
             this.listBox_Funcs.Items.RemoveAt(this.listBox_Funcs.SelectedIndex);
+            // Set is Changed to true, bcs we changed that list
             isChanged = true;
         }
         #endregion
-
+        // Save information from sidebar to selected class
         private void button_SaveClass_Click(object sender, EventArgs e) {
+            // If we didnt changed anything or we have error in our sidebar - return
             if (!isChanged || !this.ValidateChildren())
                 return;
 
+            // Set name of the selected class to text in class name textbox 
             this.Diagram.CurrentlySelectedClass.ClassName = textBox_ClassName.Text;
-            this.Diagram.CurrentlySelectedClass.Properties = new BindingList<string>(this.listBox_Props.Items.Cast<string>().ToList());
-            this.Diagram.CurrentlySelectedClass.Functions = new BindingList<string>(this.listBox_Funcs.Items.Cast<string>().ToList());
-            this.pictureBox_Editor.Invalidate();
+            // Set list of properties of the selected class to list from sidebar - cast it to List<string>
+            this.Diagram.CurrentlySelectedClass.Properties = new List<string>(this.listBox_Props.Items.Cast<string>().ToList());
+            // Set list of functions of the selected class to list from sidebar - cast it to List<string>
+            this.Diagram.CurrentlySelectedClass.Functions = new List<string>(this.listBox_Funcs.Items.Cast<string>().ToList());
+            // Set isAbstract of the selected class to bool from checkbox
             this.Diagram.CurrentlySelectedClass.IsAbstract = this.checkBox_Abstract.Checked;
+            // Set isChanged to false, bcs we saved all our changes
             this.isChanged = false;
+
+            // Redraw
+            this.pictureBox_Editor.Invalidate();
         }
 
+        // Validating class name textbox
         private void textBox_ClassName_Validating(object sender, CancelEventArgs e) {
+            // Cast sender to Texbox
             TextBox tb = sender as TextBox;
+            // If our cast results in null - return
             if (tb is null)
                 return;
+
             this.errorProvider1.SetError(tb, null);
+            // Class can only containt lowercase / uppercase letters, numbers and underscore
             if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z0-9_]+$")) {
                 e.Cancel = true;
                 this.errorProvider1.SetError(tb, "Only lowercase, uppercase letters or numbers or underscore.");

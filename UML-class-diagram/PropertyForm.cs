@@ -12,8 +12,7 @@ using System.Windows.Forms;
 
 namespace UML_class_diagram {
     public partial class PropertyForm : Form {
-        public string Property { get; set; }
-
+        public string Property { get; set; } // Property so we can access it from Form1
         public PropertyForm(string property) {
             InitializeComponent();
             this.Property = property;
@@ -53,8 +52,8 @@ namespace UML_class_diagram {
             if (!this.ValidateChildren())
                 return;
 
+            // Variable for whole property
             string property = "";
-
 
             // Set char of access modifier
             AccessModifier modifier = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;

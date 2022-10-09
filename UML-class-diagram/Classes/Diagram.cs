@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace UML_class_diagram.Classes {
     public class Diagram {
-        // List of all classes
-        public List<ClassModel> ClassList { get; set; }
-        // List of all relations
-        public List<RelationModel> RelationList { get; set; }
-        // Reference to selected class
-        public ClassModel CurrentlySelectedClass { get; set; }
+        public List<ClassModel> ClassList { get; set; } // List of all classes
+        public List<RelationModel> RelationList { get; set; } // List of all relations
+        public ClassModel CurrentlySelectedClass { get; set; } // Reference to selected class
 
         public Diagram() {
+            // Setup lists
             this.ClassList = new();
             this.RelationList = new();
         }
@@ -33,7 +31,7 @@ namespace UML_class_diagram.Classes {
             }
         }
         // Check if there is anything under cursor
-        // If yes, make it on top layer
+        // If yes, make it top layer
         public bool CheckSelect(int x, int y) {
             this.CurrentlySelectedClass = null;
 

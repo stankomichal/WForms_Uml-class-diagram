@@ -28,6 +28,7 @@
             this.button_Export = new System.Windows.Forms.Button();
             this.button_Add = new System.Windows.Forms.Button();
             this.panel_ClassProperties = new System.Windows.Forms.Panel();
+            this.checkBox_Abstract = new System.Windows.Forms.CheckBox();
             this.listBox_Props = new System.Windows.Forms.ListBox();
             this.listBox_Funcs = new System.Windows.Forms.ListBox();
             this.button_DeleteFunc = new System.Windows.Forms.Button();
@@ -49,7 +50,6 @@
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.checkBox_Abstract = new System.Windows.Forms.CheckBox();
             this.panel_ClassProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -112,6 +112,16 @@
             this.panel_ClassProperties.Name = "panel_ClassProperties";
             this.panel_ClassProperties.Size = new System.Drawing.Size(185, 606);
             this.panel_ClassProperties.TabIndex = 3;
+            // 
+            // checkBox_Abstract
+            // 
+            this.checkBox_Abstract.AutoSize = true;
+            this.checkBox_Abstract.Location = new System.Drawing.Point(10, 30);
+            this.checkBox_Abstract.Name = "checkBox_Abstract";
+            this.checkBox_Abstract.Size = new System.Drawing.Size(70, 19);
+            this.checkBox_Abstract.TabIndex = 7;
+            this.checkBox_Abstract.Text = "Abstract";
+            this.checkBox_Abstract.UseVisualStyleBackColor = true;
             // 
             // listBox_Props
             // 
@@ -303,16 +313,6 @@
             // 
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
-            // 
-            // checkBox_Abstract
-            // 
-            this.checkBox_Abstract.AutoSize = true;
-            this.checkBox_Abstract.Location = new System.Drawing.Point(10, 30);
-            this.checkBox_Abstract.Name = "checkBox_Abstract";
-            this.checkBox_Abstract.Size = new System.Drawing.Size(70, 19);
-            this.checkBox_Abstract.TabIndex = 7;
-            this.checkBox_Abstract.Text = "Abstract";
-            this.checkBox_Abstract.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
