@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,27 +18,35 @@ namespace UML_class_diagram {
             InitializeComponent();
             this.Property = property;
 
+            // Add dropdown items for access modifiers
             this.comboBox_AccessModifiers.Items.Add(AccessModifier.PUBLIC);
             this.comboBox_AccessModifiers.Items.Add(AccessModifier.PRIVATE);
             this.comboBox_AccessModifiers.Items.Add(AccessModifier.PROTECTED);
 
-
+            // Select first access modifier
             this.comboBox_AccessModifiers.SelectedIndex = 0;
-            if (property != "") {
-                switch (property[0]) {
 
-                    case '-':
-                        this.comboBox_AccessModifiers.SelectedIndex = 1;
-                        break;
-                    case '#':
-                        this.comboBox_AccessModifiers.SelectedIndex = 2;
-                        break;
-                }
-                property = property[1..];
-                string[] parts = property.Split(':');
-                this.textBox_PropertyName.Text = parts[0].Trim();
-                this.textBox_Type.Text = parts[1].Trim();
+            // If property is empty - no need to fill
+            if (property == "")
+                return;
+
+            // Set Access Modifier from string index [0]
+            switch (property[0]) {
+                case '-':
+                    this.comboBox_AccessModifiers.SelectedIndex = 1;
+                    break;
+                case '#':
+                    this.comboBox_AccessModifiers.SelectedIndex = 2;
+                    break;
             }
+            // Get property without first char
+            property = property[1..];
+            // Split by ":"
+            string[] parts = property.Split(':');
+            // Set property name and trim it
+            this.textBox_PropertyName.Text = parts[0].Trim();
+            // Set property type and trim it
+            this.textBox_Type.Text = parts[1].Trim();
         }
 
         private void button_OK_Click(object sender, EventArgs e) {
@@ -46,25 +55,20 @@ namespace UML_class_diagram {
 
             string property = "";
 
-            switch ((AccessModifier)this.comboBox_AccessModifiers.SelectedItem) {
-                case AccessModifier.PUBLIC:
-                    property = "+";
-                    break;
-                case AccessModifier.PRIVATE:
-                    property = "-";
-                    break;
-                case AccessModifier.PROTECTED:
-                    property = "#";
-                    break;
-            }
 
+            // Set char of access modifier
+            AccessModifier modifier = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;
+            property += (char)modifier;
+
+            // Add property name and trim it
             property += this.textBox_PropertyName.Text.Trim();
-            if (!string.IsNullOrEmpty(this.textBox_Type.Text)) {
-                property += " : ";
-                property += this.textBox_Type.Text.Trim();
-            }
 
+            // Add divider and add property data type
+            property += " : " + this.textBox_Type.Text.Trim();
+
+            // Set property "property"
             this.Property = property;
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -74,10 +78,33 @@ namespace UML_class_diagram {
             this.Close();
         }
 
+        private void textBox_PropertyName_Validating(object sender, CancelEventArgs e) {
+            TextBox tb = sender as TextBox;
+            if (tb is null)
+                return;
+            this.errorProvider1.SetError(tb, null);
+
+            if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z0-9_]+$")) {
+                e.Cancel = true;
+                this.errorProvider1.SetError(tb, "Only lowercase, uppercase letters or numbers or underscore.");
+            }
+        }
+
+        private void textBox_Type_Validating(object sender, CancelEventArgs e) {
+            TextBox tb = sender as TextBox;
+            if (tb is null)
+                return;
+            this.errorProvider1.SetError(tb, null);
+
+            if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z]+$")) {
+                e.Cancel = true;
+                this.errorProvider1.SetError(tb, "Only lowercase or uppercase letters.");
+            }
+        }
     }
     public enum AccessModifier {
-        PUBLIC,
-        PRIVATE,
-        PROTECTED
+        PUBLIC = '+',
+        PRIVATE = '-',
+        PROTECTED = '#',
     }
 }

@@ -37,6 +37,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label6 = new System.Windows.Forms.Label();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox_Type
@@ -47,6 +49,7 @@
             this.textBox_Type.Size = new System.Drawing.Size(121, 27);
             this.textBox_Type.TabIndex = 11;
             this.toolTip1.SetToolTip(this.textBox_Type, "Input for return data type. Leave blank if void");
+            this.textBox_Type.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Type_Validating);
             // 
             // label3
             // 
@@ -66,6 +69,7 @@
             this.textBox_FunctionName.Size = new System.Drawing.Size(121, 27);
             this.textBox_FunctionName.TabIndex = 12;
             this.toolTip1.SetToolTip(this.textBox_FunctionName, "Input for function name");
+            this.textBox_FunctionName.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_FunctionName_Validating);
             // 
             // label2
             // 
@@ -138,11 +142,12 @@
             this.textBox_Argument.Location = new System.Drawing.Point(310, 63);
             this.textBox_Argument.Multiline = true;
             this.textBox_Argument.Name = "textBox_Argument";
-            this.textBox_Argument.Size = new System.Drawing.Size(246, 178);
+            this.textBox_Argument.Size = new System.Drawing.Size(227, 178);
             this.textBox_Argument.TabIndex = 14;
             this.toolTip1.SetToolTip(this.textBox_Argument, "Input for arguments. Write each argument on new line. Syntax -> argumentName : da" +
         "taType");
             this.textBox_Argument.WordWrap = false;
+            this.textBox_Argument.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Argument_Validating);
             // 
             // label5
             // 
@@ -164,10 +169,16 @@
             this.label6.Text = "argumentName : dataType";
             this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider1.ContainerControl = this;
+            // 
             // FunctionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.ClientSize = new System.Drawing.Size(568, 300);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -183,6 +194,7 @@
             this.Controls.Add(this.button_OK);
             this.Name = "FunctionForm";
             this.Text = "Function Editor";
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,5 +215,6 @@
         private Label label5;
         private ToolTip toolTip1;
         private Label label6;
+        private ErrorProvider errorProvider1;
     }
 }

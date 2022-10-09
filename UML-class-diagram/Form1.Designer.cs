@@ -48,14 +48,17 @@
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.checkBox_Abstract = new System.Windows.Forms.CheckBox();
             this.panel_ClassProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // button_Import
             // 
             this.button_Import.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Import.Location = new System.Drawing.Point(993, 12);
+            this.button_Import.Location = new System.Drawing.Point(993, 7);
             this.button_Import.Name = "button_Import";
             this.button_Import.Size = new System.Drawing.Size(85, 30);
             this.button_Import.TabIndex = 1;
@@ -66,7 +69,7 @@
             // button_Export
             // 
             this.button_Export.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Export.Location = new System.Drawing.Point(1087, 12);
+            this.button_Export.Location = new System.Drawing.Point(1087, 7);
             this.button_Export.Name = "button_Export";
             this.button_Export.Size = new System.Drawing.Size(85, 30);
             this.button_Export.TabIndex = 1;
@@ -77,7 +80,7 @@
             // button_Add
             // 
             this.button_Add.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Add.Location = new System.Drawing.Point(39, 11);
+            this.button_Add.Location = new System.Drawing.Point(39, 6);
             this.button_Add.Name = "button_Add";
             this.button_Add.Size = new System.Drawing.Size(125, 30);
             this.button_Add.TabIndex = 2;
@@ -91,6 +94,7 @@
             this.panel_ClassProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_ClassProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_ClassProperties.Controls.Add(this.checkBox_Abstract);
             this.panel_ClassProperties.Controls.Add(this.listBox_Props);
             this.panel_ClassProperties.Controls.Add(this.listBox_Funcs);
             this.panel_ClassProperties.Controls.Add(this.button_DeleteFunc);
@@ -104,9 +108,9 @@
             this.panel_ClassProperties.Controls.Add(this.label2);
             this.panel_ClassProperties.Controls.Add(this.label1);
             this.panel_ClassProperties.Controls.Add(this.textBox_ClassName);
-            this.panel_ClassProperties.Location = new System.Drawing.Point(12, 48);
+            this.panel_ClassProperties.Location = new System.Drawing.Point(5, 43);
             this.panel_ClassProperties.Name = "panel_ClassProperties";
-            this.panel_ClassProperties.Size = new System.Drawing.Size(178, 601);
+            this.panel_ClassProperties.Size = new System.Drawing.Size(185, 606);
             this.panel_ClassProperties.TabIndex = 3;
             // 
             // listBox_Props
@@ -115,7 +119,7 @@
             this.listBox_Props.ItemHeight = 15;
             this.listBox_Props.Location = new System.Drawing.Point(3, 70);
             this.listBox_Props.Name = "listBox_Props";
-            this.listBox_Props.Size = new System.Drawing.Size(170, 184);
+            this.listBox_Props.Size = new System.Drawing.Size(177, 184);
             this.listBox_Props.TabIndex = 4;
             this.toolTip1.SetToolTip(this.listBox_Props, "List of properties");
             // 
@@ -125,13 +129,13 @@
             this.listBox_Funcs.ItemHeight = 15;
             this.listBox_Funcs.Location = new System.Drawing.Point(3, 316);
             this.listBox_Funcs.Name = "listBox_Funcs";
-            this.listBox_Funcs.Size = new System.Drawing.Size(170, 184);
+            this.listBox_Funcs.Size = new System.Drawing.Size(177, 184);
             this.listBox_Funcs.TabIndex = 4;
             this.toolTip1.SetToolTip(this.listBox_Funcs, "List of all functions");
             // 
             // button_DeleteFunc
             // 
-            this.button_DeleteFunc.Location = new System.Drawing.Point(118, 506);
+            this.button_DeleteFunc.Location = new System.Drawing.Point(122, 506);
             this.button_DeleteFunc.Name = "button_DeleteFunc";
             this.button_DeleteFunc.Size = new System.Drawing.Size(50, 23);
             this.button_DeleteFunc.TabIndex = 6;
@@ -142,7 +146,7 @@
             // 
             // button_EditFunc
             // 
-            this.button_EditFunc.Location = new System.Drawing.Point(62, 506);
+            this.button_EditFunc.Location = new System.Drawing.Point(66, 506);
             this.button_EditFunc.Name = "button_EditFunc";
             this.button_EditFunc.Size = new System.Drawing.Size(50, 23);
             this.button_EditFunc.TabIndex = 5;
@@ -153,7 +157,7 @@
             // 
             // button_DeleteProperty
             // 
-            this.button_DeleteProperty.Location = new System.Drawing.Point(118, 262);
+            this.button_DeleteProperty.Location = new System.Drawing.Point(122, 262);
             this.button_DeleteProperty.Name = "button_DeleteProperty";
             this.button_DeleteProperty.Size = new System.Drawing.Size(50, 23);
             this.button_DeleteProperty.TabIndex = 6;
@@ -164,7 +168,7 @@
             // 
             // button_AddFunc
             // 
-            this.button_AddFunc.Location = new System.Drawing.Point(6, 506);
+            this.button_AddFunc.Location = new System.Drawing.Point(10, 506);
             this.button_AddFunc.Name = "button_AddFunc";
             this.button_AddFunc.Size = new System.Drawing.Size(50, 23);
             this.button_AddFunc.TabIndex = 5;
@@ -175,7 +179,7 @@
             // 
             // button_EditProperty
             // 
-            this.button_EditProperty.Location = new System.Drawing.Point(62, 262);
+            this.button_EditProperty.Location = new System.Drawing.Point(66, 262);
             this.button_EditProperty.Name = "button_EditProperty";
             this.button_EditProperty.Size = new System.Drawing.Size(50, 23);
             this.button_EditProperty.TabIndex = 5;
@@ -186,7 +190,7 @@
             // 
             // button_AddProperty
             // 
-            this.button_AddProperty.Location = new System.Drawing.Point(6, 262);
+            this.button_AddProperty.Location = new System.Drawing.Point(10, 262);
             this.button_AddProperty.Name = "button_AddProperty";
             this.button_AddProperty.Size = new System.Drawing.Size(50, 23);
             this.button_AddProperty.TabIndex = 5;
@@ -198,7 +202,7 @@
             // button_SaveClass
             // 
             this.button_SaveClass.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_SaveClass.Location = new System.Drawing.Point(49, 555);
+            this.button_SaveClass.Location = new System.Drawing.Point(55, 555);
             this.button_SaveClass.Name = "button_SaveClass";
             this.button_SaveClass.Size = new System.Drawing.Size(75, 29);
             this.button_SaveClass.TabIndex = 4;
@@ -228,7 +232,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 20);
+            this.label1.Location = new System.Drawing.Point(4, 8);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 15);
             this.label1.TabIndex = 2;
@@ -236,11 +240,12 @@
             // 
             // textBox_ClassName
             // 
-            this.textBox_ClassName.Location = new System.Drawing.Point(85, 17);
+            this.textBox_ClassName.Location = new System.Drawing.Point(75, 5);
             this.textBox_ClassName.Name = "textBox_ClassName";
-            this.textBox_ClassName.Size = new System.Drawing.Size(88, 23);
+            this.textBox_ClassName.Size = new System.Drawing.Size(73, 23);
             this.textBox_ClassName.TabIndex = 1;
             this.toolTip1.SetToolTip(this.textBox_ClassName, "Input for class name");
+            this.textBox_ClassName.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_ClassName_Validating);
             // 
             // pictureBox_Editor
             // 
@@ -248,9 +253,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox_Editor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox_Editor.Location = new System.Drawing.Point(196, 48);
+            this.pictureBox_Editor.Location = new System.Drawing.Point(196, 43);
             this.pictureBox_Editor.Name = "pictureBox_Editor";
-            this.pictureBox_Editor.Size = new System.Drawing.Size(976, 601);
+            this.pictureBox_Editor.Size = new System.Drawing.Size(976, 606);
             this.pictureBox_Editor.TabIndex = 0;
             this.pictureBox_Editor.TabStop = false;
             this.pictureBox_Editor.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Editor_Paint);
@@ -294,6 +299,21 @@
             // 
             this.ContentPanel.Size = new System.Drawing.Size(150, 150);
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // checkBox_Abstract
+            // 
+            this.checkBox_Abstract.AutoSize = true;
+            this.checkBox_Abstract.Location = new System.Drawing.Point(10, 30);
+            this.checkBox_Abstract.Name = "checkBox_Abstract";
+            this.checkBox_Abstract.Size = new System.Drawing.Size(70, 19);
+            this.checkBox_Abstract.TabIndex = 7;
+            this.checkBox_Abstract.Text = "Abstract";
+            this.checkBox_Abstract.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -311,6 +331,7 @@
             this.panel_ClassProperties.ResumeLayout(false);
             this.panel_ClassProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -340,5 +361,7 @@
         private Button button_AddFunc;
         private Button button_SaveClass;
         private ToolTip toolTip1;
+        private ErrorProvider errorProvider1;
+        private CheckBox checkBox_Abstract;
     }
 }

@@ -33,6 +33,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBox_Type = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // button_OK
@@ -98,6 +100,7 @@
             this.textBox_PropertyName.Size = new System.Drawing.Size(121, 27);
             this.textBox_PropertyName.TabIndex = 4;
             this.toolTip1.SetToolTip(this.textBox_PropertyName, "Input for property name");
+            this.textBox_PropertyName.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_PropertyName_Validating);
             // 
             // label3
             // 
@@ -117,6 +120,12 @@
             this.textBox_Type.Size = new System.Drawing.Size(121, 27);
             this.textBox_Type.TabIndex = 4;
             this.toolTip1.SetToolTip(this.textBox_Type, "Input for data type");
+            this.textBox_Type.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Type_Validating);
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider1.ContainerControl = this;
             // 
             // PropertyForm
             // 
@@ -134,6 +143,7 @@
             this.Controls.Add(this.button_OK);
             this.Name = "PropertyForm";
             this.Text = "Property Editor";
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -150,5 +160,6 @@
         private Label label3;
         private TextBox textBox_Type;
         private ToolTip toolTip1;
+        private ErrorProvider errorProvider1;
     }
 }
