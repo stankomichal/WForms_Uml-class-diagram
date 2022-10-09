@@ -42,6 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_ClassName = new System.Windows.Forms.TextBox();
+            this.panel_DiagramProperties = new System.Windows.Forms.Panel();
             this.pictureBox_Editor = new System.Windows.Forms.PictureBox();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -50,6 +51,7 @@
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.panel_RelationProperties = new System.Windows.Forms.Panel();
             this.panel_ClassProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -257,6 +259,16 @@
             this.toolTip1.SetToolTip(this.textBox_ClassName, "Input for class name");
             this.textBox_ClassName.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_ClassName_Validating);
             // 
+            // panel_DiagramProperties
+            // 
+            this.panel_DiagramProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel_DiagramProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_DiagramProperties.Location = new System.Drawing.Point(318, 43);
+            this.panel_DiagramProperties.Name = "panel_DiagramProperties";
+            this.panel_DiagramProperties.Size = new System.Drawing.Size(185, 606);
+            this.panel_DiagramProperties.TabIndex = 8;
+            // 
             // pictureBox_Editor
             // 
             this.pictureBox_Editor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -314,11 +326,25 @@
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // panel_RelationProperties
+            // 
+            this.panel_RelationProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel_RelationProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_RelationProperties.Location = new System.Drawing.Point(592, 43);
+            this.panel_RelationProperties.Name = "panel_RelationProperties";
+            this.panel_RelationProperties.Size = new System.Drawing.Size(185, 606);
+            this.panel_RelationProperties.TabIndex = 8;
+            this.panel_RelationProperties.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.ClientSize = new System.Drawing.Size(1184, 661);
+            this.Controls.Add(this.panel_DiagramProperties);
+            this.Controls.Add(this.panel_RelationProperties);
             this.Controls.Add(this.panel_ClassProperties);
             this.Controls.Add(this.button_Add);
             this.Controls.Add(this.button_Export);
@@ -363,5 +389,7 @@
         private ToolTip toolTip1;
         private ErrorProvider errorProvider1;
         private CheckBox checkBox_Abstract;
+        private Panel panel_DiagramProperties;
+        private Panel panel_RelationProperties;
     }
 }

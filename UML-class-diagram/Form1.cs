@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UML_class_diagram.Classes;
 
@@ -15,6 +16,19 @@ namespace UML_class_diagram {
             InitializeComponent();
             // Create diagram
             this.Diagram = new();
+
+            // Correct panels positions
+            this.panel_DiagramProperties.Left = this.panel_ClassProperties.Left;
+            this.panel_DiagramProperties.Top = this.panel_ClassProperties.Top;
+            this.panel_RelationProperties.Left = this.panel_ClassProperties.Left;
+            this.panel_RelationProperties.Top = this.panel_ClassProperties.Top;
+
+            // Set sidebar visibility to false when event is emited
+            this.Diagram.deselectAction += () => {
+                this.panel_ClassProperties.Visible = false;
+                this.panel_RelationProperties.Visible = false;
+                this.panel_DiagramProperties.Visible = true;
+            };
             // Set visibility of sidebar to false
             this.panel_ClassProperties.Visible = false;
 
@@ -35,14 +49,13 @@ namespace UML_class_diagram {
             }
 
             // If we have anything selected - deselect
-            if (this.Diagram.CurrentlySelectedClass != null) {
-                this.Diagram.CurrentlySelectedClass.selected = false;
-                this.Diagram.CurrentlySelectedClass = null;
-            }
+            if (this.Diagram.CurrentlySelectedItem != null)
+                this.Diagram.CurrentlySelectedItem.Selected = false;
             // Call add class method
             this.Diagram.AddClass();
             // Set sidebar visibility to true
             this.panel_ClassProperties.Visible = true;
+            this.panel_DiagramProperties.Visible = false;
             // Fill sidebar with data
             FillPanel();
             // Invalidate picturebox to redraw it
@@ -70,18 +83,14 @@ namespace UML_class_diagram {
                 ConfirmForm form = new ConfirmForm("You have unsaved changes.\r\nDo you want to continue?");
                 if (form.ShowDialog() != DialogResult.OK)
                     return;
-                else
+                else {
                     isChanged = false;
+                    this.errorProvider1.Clear();
+                }
             }
 
-            // If we have anything selected - deselect
-            if (this.Diagram.CurrentlySelectedClass != null) {
-                this.Diagram.CurrentlySelectedClass.selected = false;
-                this.Diagram.CurrentlySelectedClass = null;
-                this.panel_ClassProperties.Visible = false;
-            }
             // Find selected
-            if (this.Diagram.CheckSelect(e.X, e.Y)) {
+            if (this.Diagram.MouseHandler(e.X, e.Y)) {
                 // Set mouse positions for later use in moveMouse
                 mouseX = e.X;
                 mouseY = e.Y;
@@ -89,34 +98,52 @@ namespace UML_class_diagram {
                 this.isDragging = true;
                 // Make sidebar visible
                 this.panel_ClassProperties.Visible = true;
+                this.panel_DiagramProperties.Visible = false;
+                this.panel_RelationProperties.Visible = false;
                 // Fill sidebar with informations of selected class
                 FillPanel();
                 // Set isChanged to false bcs of filling sidebar - changing values
                 isChanged = false;
             }
+
             // Redraw picturebox
             this.pictureBox_Editor.Invalidate();
         }
         // Called everytime user moved cursor inside of the paintbox
         private void pictureBox_Editor_MouseMove(object sender, MouseEventArgs e) {
+            // If we just moved without clicking anything and we have something selected
+            if (e.Button == MouseButtons.None && this.Diagram.CurrentlySelectedItem is not null) {
+                // Call click on me method on selected class
+                switch (this.Diagram.CurrentlySelectedItem.ClickOnMe(e.X, e.Y)) {
+                    // If we have cursor on relation arrow or on delete icon - change cursor
+                    case ClickType.RELATION:
+                    case ClickType.DELETE:
+                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Hand;
+                        break;
+                }
+            }
             // If clicked button is not left - return
             // If user is not dragging - return
             if (!this.isDragging || e.Button != MouseButtons.Left)
                 return;
 
+            //if (e.X < 0 || e.X > this.pictureBox_Editor.Width || e.Y < 0 || e.Y > this.pictureBox_Editor.Height) {
+            //    Debug.WriteLine("RETURN");
+            //    return;
+            //}
+
             // Get offset of cursor movement
             int offsetX = e.X - mouseX;
             int offsetY = e.Y - mouseY;
-
             // Call move method on selected class
-            if (!this.Diagram.CurrentlySelectedClass.MoveStartPoint(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
+            if (!this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
 
-                //Cursor.Position = new Point(Cursor.Position.X, Cursor.Position.Y);
                 //return;
             }
             // Set cursor positions
             mouseX += offsetX;
             mouseY += offsetY;
+
             // Redraw
             this.pictureBox_Editor.Invalidate();
         }
@@ -139,24 +166,24 @@ namespace UML_class_diagram {
         // Method to fill our sidebar
         private void FillPanel() {
             // Make sure that we dont have null reference on currect selected class
-            if (this.Diagram.CurrentlySelectedClass == null)
+            ClassModel classModel = this.Diagram.CurrentlySelectedItem as ClassModel;
+            if (classModel == null)
                 return;
 
             // Set class name textbox to selected class name
-            this.textBox_ClassName.Text = this.Diagram.CurrentlySelectedClass.ClassName;
+            this.textBox_ClassName.Text = classModel.ClassName;
 
             // Clear lists so we have empty lists that we use will fill
             this.listBox_Props.Items.Clear();
             this.listBox_Funcs.Items.Clear();
 
             // If class is abstract - check checkbox
-            this.checkBox_Abstract.Checked = this.Diagram.CurrentlySelectedClass.IsAbstract;
-
+            this.checkBox_Abstract.Checked = classModel.IsAbstract;
             // Fill Properties list with items in selected class properties
-            foreach (var item in this.Diagram.CurrentlySelectedClass.Properties)
+            foreach (var item in classModel.Properties)
                 this.listBox_Props.Items.Add(item);
             // Fill Functions list with items in selected class functions
-            foreach (var item in this.Diagram.CurrentlySelectedClass.Functions)
+            foreach (var item in classModel.Functions)
                 this.listBox_Funcs.Items.Add(item);
 
             // This is not reference, we fill both lists so our changes are not immediately written to our selected class
@@ -245,15 +272,17 @@ namespace UML_class_diagram {
             // If we didnt changed anything or we have error in our sidebar - return
             if (!isChanged || !this.ValidateChildren())
                 return;
-
+            ClassModel selectedClass = this.Diagram.CurrentlySelectedItem as ClassModel;
+            if (selectedClass == null)
+                return;
             // Set name of the selected class to text in class name textbox 
-            this.Diagram.CurrentlySelectedClass.ClassName = textBox_ClassName.Text;
+            selectedClass.ClassName = textBox_ClassName.Text;
             // Set list of properties of the selected class to list from sidebar - cast it to List<string>
-            this.Diagram.CurrentlySelectedClass.Properties = new List<string>(this.listBox_Props.Items.Cast<string>().ToList());
+            selectedClass.Properties = new List<string>(this.listBox_Props.Items.Cast<string>().ToList());
             // Set list of functions of the selected class to list from sidebar - cast it to List<string>
-            this.Diagram.CurrentlySelectedClass.Functions = new List<string>(this.listBox_Funcs.Items.Cast<string>().ToList());
+            selectedClass.Functions = new List<string>(this.listBox_Funcs.Items.Cast<string>().ToList());
             // Set isAbstract of the selected class to bool from checkbox
-            this.Diagram.CurrentlySelectedClass.IsAbstract = this.checkBox_Abstract.Checked;
+            selectedClass.IsAbstract = this.checkBox_Abstract.Checked;
             // Set isChanged to false, bcs we saved all our changes
             this.isChanged = false;
 
@@ -268,8 +297,16 @@ namespace UML_class_diagram {
             // If our cast results in null - return
             if (tb is null)
                 return;
-
             this.errorProvider1.SetError(tb, null);
+            ClassModel selectedClass = this.Diagram.CurrentlySelectedItem as ClassModel;
+            if (tb.Text != selectedClass.ClassName) {
+                if (this.Diagram.ClassList.Count(x => x.ClassName == tb.Text) != 0) {
+                    e.Cancel = true;
+                    this.errorProvider1.SetError(tb, "Class name has to be unique for every class.");
+                }
+            }
+
+
             // Class can only containt lowercase / uppercase letters, numbers and underscore
             if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z0-9_]+$")) {
                 e.Cancel = true;

@@ -83,7 +83,7 @@ namespace UML_class_diagram {
                 return;
             this.errorProvider1.SetError(tb, null);
 
-            if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z0-9_]+$")) {
+            if (!Regex.IsMatch(tb.Text.Trim(), @"^[a-zA-Z0-9_]+$")) {
                 e.Cancel = true;
                 this.errorProvider1.SetError(tb, "Only lowercase, uppercase letters or numbers or underscore.");
             }
@@ -95,7 +95,7 @@ namespace UML_class_diagram {
                 return;
             this.errorProvider1.SetError(tb, null);
 
-            if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z]+$")) {
+            if (!Regex.IsMatch(tb.Text.Trim(), @"^[a-zA-Z]+$")) {
                 e.Cancel = true;
                 this.errorProvider1.SetError(tb, "Only lowercase or uppercase letters.");
             }
