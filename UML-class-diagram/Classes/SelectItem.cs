@@ -11,5 +11,6 @@ namespace UML_class_diagram.Classes {
         public abstract bool Selected { get; set; }// Is this item selected
         public abstract ClickType ClickOnMe(int x, int y);
         public abstract bool Move(int x, int y, int width, int height);
+        public abstract void FillSidebar(Form1 form);
     }
 }

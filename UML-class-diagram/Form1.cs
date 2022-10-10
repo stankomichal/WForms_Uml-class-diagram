@@ -57,7 +57,8 @@ namespace UML_class_diagram {
             this.panel_ClassProperties.Visible = true;
             this.panel_DiagramProperties.Visible = false;
             // Fill sidebar with data
-            FillPanel();
+            this.Diagram.CurrentlySelectedItem.FillSidebar(this);
+            //FillPanel();
             // Invalidate picturebox to redraw it
             this.pictureBox_Editor.Invalidate();
             // Set isChanged to false bcs of filling sidebar - changing values
@@ -101,7 +102,9 @@ namespace UML_class_diagram {
                 this.panel_DiagramProperties.Visible = false;
                 this.panel_RelationProperties.Visible = false;
                 // Fill sidebar with informations of selected class
-                FillPanel();
+                if (this.Diagram.CurrentlySelectedItem is not null)
+                    this.Diagram.CurrentlySelectedItem.FillSidebar(this);
+                //FillPanel();
                 // Set isChanged to false bcs of filling sidebar - changing values
                 isChanged = false;
             }
@@ -163,32 +166,6 @@ namespace UML_class_diagram {
             // Redraw
             this.Diagram.Draw(e.Graphics);
         }
-        // Method to fill our sidebar
-        private void FillPanel() {
-            // Make sure that we dont have null reference on currect selected class
-            ClassModel classModel = this.Diagram.CurrentlySelectedItem as ClassModel;
-            if (classModel == null)
-                return;
-
-            // Set class name textbox to selected class name
-            this.textBox_ClassName.Text = classModel.ClassName;
-
-            // Clear lists so we have empty lists that we use will fill
-            this.listBox_Props.Items.Clear();
-            this.listBox_Funcs.Items.Clear();
-
-            // If class is abstract - check checkbox
-            this.checkBox_Abstract.Checked = classModel.IsAbstract;
-            // Fill Properties list with items in selected class properties
-            foreach (var item in classModel.Properties)
-                this.listBox_Props.Items.Add(item);
-            // Fill Functions list with items in selected class functions
-            foreach (var item in classModel.Functions)
-                this.listBox_Funcs.Items.Add(item);
-
-            // This is not reference, we fill both lists so our changes are not immediately written to our selected class
-        }
-
         #region Properties
         // Add new property to list
         private void button_AddProperty_Click(object sender, EventArgs e) {
@@ -305,7 +282,6 @@ namespace UML_class_diagram {
                     this.errorProvider1.SetError(tb, "Class name has to be unique for every class.");
                 }
             }
-
 
             // Class can only containt lowercase / uppercase letters, numbers and underscore
             if (!Regex.IsMatch(tb.Text, @"^[a-zA-Z0-9_]+$")) {

@@ -168,6 +168,26 @@ namespace UML_class_diagram.Classes {
             this.LeftTop.Y += y;
             return true;
         }
+
+        public override void FillSidebar(Form1 form) {
+            // Set class name textbox to selected class name
+            form.textBox_ClassName.Text = this.ClassName;
+
+            // Clear lists so we have empty lists that we use will fill
+            form.listBox_Props.Items.Clear();
+            form.listBox_Funcs.Items.Clear();
+
+            // If class is abstract - check checkbox
+            form.checkBox_Abstract.Checked = this.IsAbstract;
+            // Fill Properties list with items in selected class properties
+            foreach (var item in this.Properties)
+                form.listBox_Props.Items.Add(item);
+            // Fill Functions list with items in selected class functions
+            foreach (var item in this.Functions)
+                form.listBox_Funcs.Items.Add(item);
+
+            // This is not reference, we fill both lists so our changes are not immediately written to our selected class
+        }
     }
     public enum ClickType {
         NONE,

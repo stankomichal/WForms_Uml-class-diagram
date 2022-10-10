@@ -12,6 +12,10 @@ namespace UML_class_diagram.Classes {
             throw new NotImplementedException();
         }
 
+        public override void FillSidebar(Form1 form) {
+            throw new NotImplementedException();
+        }
+
         public override bool Move(int x, int y, int width, int height) {
             throw new NotImplementedException();
         }
