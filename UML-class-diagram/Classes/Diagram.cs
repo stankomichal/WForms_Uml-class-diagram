@@ -17,6 +17,14 @@ namespace UML_class_diagram.Classes {
             // Setup lists
             this.ClassList = new();
             this.RelationList = new();
+            AddClass();
+            AddClass();
+            //AddClass();
+            RelationModel rel = new RelationModel(ClassList[0]);
+            RelationList.Add(rel);
+            rel.ToClass = ClassList[1];
+            ClassList[1].LeftTop = new Point(300, 300);
+            //RelationList.Add(new RelationModel(ClassList[1]));
         }
         // Add class to class list and make it selected
         public void AddClass() {
@@ -25,11 +33,24 @@ namespace UML_class_diagram.Classes {
             this.ClassList.Add(classModel);
             this.CurrentlySelectedItem = classModel;
         }
+        public void AddRelation() {
+            RelationModel relation = new(this.CurrentlySelectedItem as ClassModel);
+            this.RelationList.Add(relation);
+            //this.CurrentlySelectedItem = relation;
+        }
         public void RemoveClass() {
             ConfirmForm form = new ConfirmForm("Are you sure you want to remove this class?");
 
             if (form.ShowDialog() == DialogResult.OK) {
-                this.ClassList.Remove(this.CurrentlySelectedItem as ClassModel);
+                ClassModel removeClass = this.CurrentlySelectedItem as ClassModel;
+                for (int i = 0; i < this.RelationList.Count;) {
+                    if (this.RelationList[i].FromClass == removeClass || this.RelationList[i].ToClass == removeClass)
+                        this.RelationList.RemoveAt(i);
+                    else
+                        i++;
+                }
+
+                this.ClassList.Remove(removeClass);
                 this.CurrentlySelectedItem = null;
                 deselectAction?.Invoke();
             }
@@ -39,25 +60,22 @@ namespace UML_class_diagram.Classes {
             foreach (var classModel in this.ClassList) {
                 classModel.Draw(g);
             }
+            foreach (var relationModel in this.RelationList) {
+                relationModel.Draw(g);
+            }
         }
         // MouseHandler
-        public bool MouseHandler(int x, int y) {
+        public ClickType MouseHandler(int x, int y) {
             // If we have alredy something selected
             if (this.CurrentlySelectedItem as ClassModel != null) {
-                switch (this.CurrentlySelectedItem.ClickOnMe(x, y)) {
-                    case ClickType.MOVE:
-                        return true;
-                    case ClickType.RELATION:
-                        return false;
-                    case ClickType.DELETE:
-                        RemoveClass();
-                        return false;
-                    case ClickType.NONE:
-                    default:
-                        this.CurrentlySelectedItem.Selected = false;
-                        this.CurrentlySelectedItem = null;
-                        break;
-                }
+                if (this.CurrentlySelectedItem.ClickOnMe(x, y) != ClickType.NONE)
+                    return this.CurrentlySelectedItem.ClickOnMe(x, y);
+
+
+            }
+            if (this.CurrentlySelectedItem != null) {
+                this.CurrentlySelectedItem.Selected = false;
+                this.CurrentlySelectedItem = null;
             }
             // Find if we clicked on something else
             for (int i = this.ClassList.Count - 1; i >= 0; i--) {
@@ -69,13 +87,34 @@ namespace UML_class_diagram.Classes {
                     this.CurrentlySelectedItem.Selected = true;
 
                     this.ClassList.RemoveAt(i);
-                    return true;
+                    return ClickType.MOVE;
+                }
+            }
+            for (int i = this.RelationList.Count - 1; i >= 0; i--) {
+                if (this.RelationList[i].ClickOnMe(x,y) == ClickType.MOVE) {
+
+                    this.CurrentlySelectedItem = this.RelationList[i];
+                    this.CurrentlySelectedItem.Selected = true;
+
+                    return ClickType.MOVE;
                 }
             }
 
+
             // Invoke delesect Action to inform form that we want it to deselect - make sidebar invisible
             deselectAction?.Invoke();
-            return false;
+            return ClickType.NONE;
+        }
+
+        public void RemoveRelation() {
+            ConfirmForm form = new ConfirmForm("Are you sure you want to remove this relation?");
+
+            if (form.ShowDialog() == DialogResult.OK) {
+                this.RelationList.Remove(this.CurrentlySelectedItem as RelationModel);
+
+                this.CurrentlySelectedItem = null;
+                deselectAction?.Invoke();
+            }
         }
     }
 }

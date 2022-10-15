@@ -1,7 +1,10 @@
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using UML_class_diagram.Classes;
+using UML_class_diagram.Classes.RelationLines;
 
 namespace UML_class_diagram {
     public partial class Form1 : Form {
@@ -11,6 +14,7 @@ namespace UML_class_diagram {
         private int mouseY; // Y position of mouse when we clicked and moved
 
         private bool isDragging; // Is user dragging class
+        private bool isCreatingRelation; // Is user dragging class
         private bool isChanged; // If user changed anything in sidebar
         public Form1() {
             InitializeComponent();
@@ -35,6 +39,27 @@ namespace UML_class_diagram {
             // Setup events for changes
             this.textBox_ClassName.TextChanged += (x, e) => this.isChanged = true;
             this.checkBox_Abstract.CheckedChanged += (x, e) => this.isChanged = true;
+            this.comboBox_RelationType.SelectedIndexChanged += (x, e) => this.isChanged = true;
+            this.comboBox_RelationType.SelectedIndexChanged += (x, e) => this.isChanged = true;
+
+            this.comboBox_RelationType.Items.Add(RelationType.ASSOCIATION);
+            this.comboBox_RelationType.Items.Add(RelationType.INHERITANCE);
+            this.comboBox_RelationType.Items.Add(RelationType.IMPLEMENTATION);
+            this.comboBox_RelationType.Items.Add(RelationType.DEPENDENCY);
+            this.comboBox_RelationType.Items.Add(RelationType.AGGREGATION);
+            this.comboBox_RelationType.Items.Add(RelationType.COMPOSITION);
+
+            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.NONE);
+            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ZEROorONE);
+            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ONE);
+            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ZEROPLUS);
+            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ONEPLUS);
+
+            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.NONE);
+            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ZEROorONE);
+            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ONE);
+            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ZEROPLUS);
+            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ONEPLUS);
         }
 
         // Button to add class
@@ -53,9 +78,7 @@ namespace UML_class_diagram {
                 this.Diagram.CurrentlySelectedItem.Selected = false;
             // Call add class method
             this.Diagram.AddClass();
-            // Set sidebar visibility to true
-            this.panel_ClassProperties.Visible = true;
-            this.panel_DiagramProperties.Visible = false;
+
             // Fill sidebar with data
             this.Diagram.CurrentlySelectedItem.FillSidebar(this);
             //FillPanel();
@@ -66,7 +89,7 @@ namespace UML_class_diagram {
         }
         // Button to import
         private void button_Import_Click(object sender, EventArgs e) {
-            this.pictureBox_Editor.Refresh();
+
         }
         // Button to export
         private void button_Export_Click(object sender, EventArgs e) {
@@ -89,24 +112,28 @@ namespace UML_class_diagram {
                     this.errorProvider1.Clear();
                 }
             }
+            switch (this.Diagram.MouseHandler(e.X, e.Y)) {
+                case ClickType.MOVE:
+                    // Set mouse positions for later use in moveMouse
+                    mouseX = e.X;
+                    mouseY = e.Y;
+                    // Set dragging to true
+                    this.isDragging = true;
 
-            // Find selected
-            if (this.Diagram.MouseHandler(e.X, e.Y)) {
-                // Set mouse positions for later use in moveMouse
-                mouseX = e.X;
-                mouseY = e.Y;
-                // Set dragging to true
-                this.isDragging = true;
-                // Make sidebar visible
-                this.panel_ClassProperties.Visible = true;
-                this.panel_DiagramProperties.Visible = false;
-                this.panel_RelationProperties.Visible = false;
-                // Fill sidebar with informations of selected class
-                if (this.Diagram.CurrentlySelectedItem is not null)
-                    this.Diagram.CurrentlySelectedItem.FillSidebar(this);
-                //FillPanel();
-                // Set isChanged to false bcs of filling sidebar - changing values
-                isChanged = false;
+                    // Fill sidebar with informations of selected item
+                    if (this.Diagram.CurrentlySelectedItem is not null)
+                        this.Diagram.CurrentlySelectedItem.FillSidebar(this);
+                    // Set isChanged to false bcs of filling sidebar - changing values
+                    isChanged = false;
+                    break;
+                case ClickType.RELATION:
+                    this.Diagram.AddRelation();
+                    this.Diagram.RelationList.Last().Move(e.X, e.Y, 1, 1);
+                    this.isCreatingRelation = true;
+                    break;
+                case ClickType.DELETE:
+                    this.Diagram.RemoveClass();
+                    break;
             }
 
             // Redraw picturebox
@@ -127,25 +154,26 @@ namespace UML_class_diagram {
             }
             // If clicked button is not left - return
             // If user is not dragging - return
-            if (!this.isDragging || e.Button != MouseButtons.Left)
+            // If user is not creating relation - return
+            if ((!this.isDragging && !this.isCreatingRelation) || e.Button != MouseButtons.Left)
                 return;
 
-            //if (e.X < 0 || e.X > this.pictureBox_Editor.Width || e.Y < 0 || e.Y > this.pictureBox_Editor.Height) {
-            //    Debug.WriteLine("RETURN");
-            //    return;
-            //}
-
-            // Get offset of cursor movement
-            int offsetX = e.X - mouseX;
-            int offsetY = e.Y - mouseY;
-            // Call move method on selected class
-            if (!this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
-
-                //return;
+            if (this.isCreatingRelation && e.Button == MouseButtons.Left) {
+                this.Diagram.RelationList.Last().Move(e.X, e.Y, 1, 1);
             }
-            // Set cursor positions
-            mouseX += offsetX;
-            mouseY += offsetY;
+            else {
+                // Get offset of cursor movement
+                int offsetX = e.X - mouseX;
+                int offsetY = e.Y - mouseY;
+                // Call move method on selected class
+                if (!this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
+
+                    //return;
+                }
+                // Set cursor positions
+                mouseX += offsetX;
+                mouseY += offsetY;
+            }
 
             // Redraw
             this.pictureBox_Editor.Invalidate();
@@ -154,8 +182,43 @@ namespace UML_class_diagram {
         private void pictureBox_Editor_MouseUp(object sender, MouseEventArgs e) {
             // If clicked button is not left - return
             // If user is not dragging - return
-            if (!this.isDragging || e.Button != MouseButtons.Left)
+            if (e.Button != MouseButtons.Left)
                 return;
+            if (this.isDragging)
+                this.isDragging = false;
+            else if (this.isCreatingRelation) {
+                RelationModel relationModel = this.Diagram.RelationList.Last();
+
+                if (this.Diagram.MouseHandler(e.X, e.Y) == ClickType.MOVE) {
+                    ClassModel classModel = this.Diagram.CurrentlySelectedItem as ClassModel;
+                    if (classModel is null) {
+                        this.isCreatingRelation = false;
+                        this.Diagram.RelationList.Remove(relationModel);
+                        this.Diagram.CurrentlySelectedItem = null;
+                        this.pictureBox_Editor.Invalidate();
+                    }
+                    if (relationModel.FromClass == classModel || this.Diagram.RelationList.Where(x => x.FromClass == relationModel.FromClass && x.ToClass == classModel).Count() != 0) {
+                        this.isCreatingRelation = false;
+                        this.Diagram.RelationList.Remove(relationModel);
+                        classModel.Selected = false;
+                        this.Diagram.CurrentlySelectedItem = null;
+                        this.pictureBox_Editor.Invalidate();
+                        return;
+                    }
+                    classModel.Selected = false;
+                    relationModel.ToClass = classModel;
+                    this.Diagram.CurrentlySelectedItem = relationModel;
+                    this.isCreatingRelation = false;
+                    relationModel.FillSidebar(this);
+                    relationModel.Selected = true;
+                    this.isChanged = false;
+                }
+                else {
+                    this.isCreatingRelation = false;
+                    this.Diagram.RelationList.Remove(relationModel);
+                }
+                this.pictureBox_Editor.Invalidate();
+            }
 
             // Set dragging to false
             this.isDragging = false;
@@ -170,7 +233,7 @@ namespace UML_class_diagram {
         // Add new property to list
         private void button_AddProperty_Click(object sender, EventArgs e) {
             // Create new PropertyForm with empty string
-            PropertyForm form = new PropertyForm("");
+            PropertyForm form = new PropertyForm(null);
             if (form.ShowDialog() == DialogResult.OK) {
                 // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
@@ -185,7 +248,7 @@ namespace UML_class_diagram {
                 return;
 
             // Create new PropertyForm with selected property
-            PropertyForm form = new PropertyForm(this.listBox_Props.SelectedItem.ToString());
+            PropertyForm form = new PropertyForm(this.listBox_Props.SelectedItem as Property);
             if (form.ShowDialog() == DialogResult.OK) {
                 // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
@@ -210,7 +273,7 @@ namespace UML_class_diagram {
         // Add new function to list
         private void button_AddFunc_Click(object sender, EventArgs e) {
             // Create new FunctionForm with empty string
-            FunctionForm form = new FunctionForm("");
+            FunctionForm form = new FunctionForm(null);
             if (form.ShowDialog() == DialogResult.OK) {
                 // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
@@ -225,7 +288,7 @@ namespace UML_class_diagram {
                 return;
 
             // Create new FunctionForm with selected function
-            FunctionForm form = new FunctionForm(this.listBox_Funcs.SelectedItem.ToString());
+            FunctionForm form = new FunctionForm(this.listBox_Funcs.SelectedItem as Function);
             if (form.ShowDialog() == DialogResult.OK) {
                 // Set is Changed to true, bcs we changed that list
                 this.isChanged = true;
@@ -255,9 +318,9 @@ namespace UML_class_diagram {
             // Set name of the selected class to text in class name textbox 
             selectedClass.ClassName = textBox_ClassName.Text;
             // Set list of properties of the selected class to list from sidebar - cast it to List<string>
-            selectedClass.Properties = new List<string>(this.listBox_Props.Items.Cast<string>().ToList());
+            selectedClass.Properties = new List<Property>(this.listBox_Props.Items.Cast<Property>().ToList());
             // Set list of functions of the selected class to list from sidebar - cast it to List<string>
-            selectedClass.Functions = new List<string>(this.listBox_Funcs.Items.Cast<string>().ToList());
+            selectedClass.Functions = new List<Function>(this.listBox_Funcs.Items.Cast<Function>().ToList());
             // Set isAbstract of the selected class to bool from checkbox
             selectedClass.IsAbstract = this.checkBox_Abstract.Checked;
             // Set isChanged to false, bcs we saved all our changes
@@ -288,6 +351,22 @@ namespace UML_class_diagram {
                 e.Cancel = true;
                 this.errorProvider1.SetError(tb, "Only lowercase, uppercase letters or numbers or underscore.");
             }
+        }
+
+        private void button_Relation_Save_Click(object sender, EventArgs e) {
+            RelationModel relModel = this.Diagram.CurrentlySelectedItem as RelationModel;
+            if (relModel is null)
+                return;
+            relModel.LineType = Line.GetLine((RelationType)this.comboBox_RelationType.SelectedItem);
+            relModel.CardinalityFrom = (CardinalityType)this.comboBox_Relation_Card_From.SelectedItem;
+            relModel.CardinalityTo = (CardinalityType)this.comboBox_Relation_Card_To.SelectedItem;
+            this.isChanged = false;
+            this.pictureBox_Editor.Invalidate();
+        }
+
+        private void button_Relation_Delete_Click(object sender, EventArgs e) {
+            this.Diagram.RemoveRelation();
+            this.pictureBox_Editor.Invalidate();
         }
     }
 }

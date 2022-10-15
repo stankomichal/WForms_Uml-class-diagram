@@ -10,11 +10,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UML_class_diagram.Classes;
 
 namespace UML_class_diagram {
     public partial class FunctionForm : Form {
-        public string Function { get; set; } // Function so we can access it from Form1
-        public FunctionForm(string function) {
+        public Function Function { get; set; } // Function so we can access it from Form1
+        public FunctionForm(Function function) {
             InitializeComponent();
 
             // Add dropdown items for access modifiers
@@ -26,64 +27,44 @@ namespace UML_class_diagram {
             this.comboBox_AccessModifiers.SelectedIndex = 0;
 
             // If function is empty - no need to fill
-            if (function == "")
+            if (function == null) {
+                this.Function = new();
                 return;
-
-            // Set Access Modifier from string index [0]
-            switch (function[0]) {
-                case '-':
-                    this.comboBox_AccessModifiers.SelectedIndex = 1;
-                    break;
-                case '#':
-                    this.comboBox_AccessModifiers.SelectedIndex = 2;
-                    break;
             }
 
-            // Get function return type
-            // If return type is void then set empty string
-            string funcType = function.Substring(function.LastIndexOf(':') + 1).Trim();
-            this.textBox_Type.Text = funcType == "void" ? "" : funcType;
-
-
-            // Find index of left / right bracket 
-            int leftBracketIndex = function.IndexOf('(');
-            int rightBracketIndex = function.IndexOf(')');
-
-            // Get all arguments inside indexes, replace "," with \r\n
-            string arguments = function.Substring(leftBracketIndex + 1, rightBracketIndex - leftBracketIndex - 1);
-            this.textBox_Argument.Text = arguments.Replace(", ", "\r\n");
-
-            // Set function name from second letter to left bracket
-            this.textBox_FunctionName.Text = function[1..(leftBracketIndex)];
+            this.Function = function;
+            switch (this.Function.AccessMod) {
+                case AccessModifier.PRIVATE:
+                    this.comboBox_AccessModifiers.SelectedIndex = 1;
+                    break;
+                case AccessModifier.PROTECTED:
+                    this.comboBox_AccessModifiers.SelectedIndex = 2;
+                    break;
+                case AccessModifier.PUBLIC:
+                default:
+                    this.comboBox_AccessModifiers.SelectedIndex = 0;
+                    break;
+            }
+            this.textBox_Type.Text = this.Function.Data.Type;
+            this.textBox_FunctionName.Text = this.Function.Data.Name;
+            this.textBox_Argument.Text = String.Join("\r\n", this.Function.Arguments);
         }
 
         private void button_OK_Click(object sender, EventArgs e) {
             if (!this.ValidateChildren())
                 return;
-
-            // Variable for whole function
-            string function = "";
-
-            // Set char of access modifier
-            AccessModifier modifier = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;
-            function += (char)modifier;
-
-            // Add function name add trim it 
-            function += this.textBox_FunctionName.Text.Trim();
-            // Add function arguments, trim it and replace "\r\n" with ", "
-            function += $"({this.textBox_Argument.Text.Trim().Replace("\r\n", ", ")})";
-
-            // Add divider
-            function += " : ";
-
-            // If return type not empty set to return type else set it to void
+            this.Function = new();
+            this.Function.AccessMod = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;
+            this.Function.Data.Name = this.textBox_FunctionName.Text.Trim();
             if (!string.IsNullOrEmpty(this.textBox_Type.Text))
-                function += this.textBox_Type.Text.Trim();
+                this.Function.Data.Type = this.textBox_Type.Text.Trim();
             else
-                function += "void";
+                this.Function.Data.Type = "void";
+            foreach (var item in this.textBox_Argument.Text.Trim().Trim('\r', '\n').Split("\r\n")) {
+                string[] parts = item.Split(" : ");
+                this.Function.Arguments.Add(new(parts[0], parts[1]));
+            }
 
-            // Set property function
-            this.Function = function;
 
             this.DialogResult = DialogResult.OK;
             this.Close();

@@ -52,9 +52,18 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.panel_RelationProperties = new System.Windows.Forms.Panel();
+            this.comboBox_Relation_Card_To = new System.Windows.Forms.ComboBox();
+            this.comboBox_Relation_Card_From = new System.Windows.Forms.ComboBox();
+            this.comboBox_RelationType = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.button_Relation_Save = new System.Windows.Forms.Button();
+            this.button_Relation_Delete = new System.Windows.Forms.Button();
             this.panel_ClassProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            this.panel_RelationProperties.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_Import
@@ -264,7 +273,7 @@
             this.panel_DiagramProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_DiagramProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel_DiagramProperties.Location = new System.Drawing.Point(318, 43);
+            this.panel_DiagramProperties.Location = new System.Drawing.Point(632, 43);
             this.panel_DiagramProperties.Name = "panel_DiagramProperties";
             this.panel_DiagramProperties.Size = new System.Drawing.Size(185, 606);
             this.panel_DiagramProperties.TabIndex = 8;
@@ -331,11 +340,95 @@
             this.panel_RelationProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_RelationProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel_RelationProperties.Location = new System.Drawing.Point(592, 43);
+            this.panel_RelationProperties.Controls.Add(this.comboBox_Relation_Card_To);
+            this.panel_RelationProperties.Controls.Add(this.comboBox_Relation_Card_From);
+            this.panel_RelationProperties.Controls.Add(this.comboBox_RelationType);
+            this.panel_RelationProperties.Controls.Add(this.label6);
+            this.panel_RelationProperties.Controls.Add(this.label4);
+            this.panel_RelationProperties.Controls.Add(this.label3);
+            this.panel_RelationProperties.Controls.Add(this.button_Relation_Delete);
+            this.panel_RelationProperties.Controls.Add(this.button_Relation_Save);
+            this.panel_RelationProperties.Location = new System.Drawing.Point(297, 43);
             this.panel_RelationProperties.Name = "panel_RelationProperties";
             this.panel_RelationProperties.Size = new System.Drawing.Size(185, 606);
             this.panel_RelationProperties.TabIndex = 8;
             this.panel_RelationProperties.Visible = false;
+            // 
+            // comboBox_Relation_Card_To
+            // 
+            this.comboBox_Relation_Card_To.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_Relation_Card_To.FormattingEnabled = true;
+            this.comboBox_Relation_Card_To.Location = new System.Drawing.Point(26, 280);
+            this.comboBox_Relation_Card_To.Name = "comboBox_Relation_Card_To";
+            this.comboBox_Relation_Card_To.Size = new System.Drawing.Size(136, 23);
+            this.comboBox_Relation_Card_To.TabIndex = 0;
+            // 
+            // comboBox_Relation_Card_From
+            // 
+            this.comboBox_Relation_Card_From.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_Relation_Card_From.FormattingEnabled = true;
+            this.comboBox_Relation_Card_From.Location = new System.Drawing.Point(26, 161);
+            this.comboBox_Relation_Card_From.Name = "comboBox_Relation_Card_From";
+            this.comboBox_Relation_Card_From.Size = new System.Drawing.Size(136, 23);
+            this.comboBox_Relation_Card_From.TabIndex = 0;
+            // 
+            // comboBox_RelationType
+            // 
+            this.comboBox_RelationType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_RelationType.FormattingEnabled = true;
+            this.comboBox_RelationType.Location = new System.Drawing.Point(26, 31);
+            this.comboBox_RelationType.Name = "comboBox_RelationType";
+            this.comboBox_RelationType.Size = new System.Drawing.Size(136, 23);
+            this.comboBox_RelationType.TabIndex = 0;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(26, 262);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(81, 15);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Cardinality to:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(26, 143);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(96, 15);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Cardinality from:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(26, 13);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(79, 15);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Relation type:";
+            // 
+            // button_Relation_Save
+            // 
+            this.button_Relation_Save.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Relation_Save.Location = new System.Drawing.Point(3, 555);
+            this.button_Relation_Save.Name = "button_Relation_Save";
+            this.button_Relation_Save.Size = new System.Drawing.Size(75, 29);
+            this.button_Relation_Save.TabIndex = 4;
+            this.button_Relation_Save.Text = "Save";
+            this.button_Relation_Save.UseVisualStyleBackColor = true;
+            this.button_Relation_Save.Click += new System.EventHandler(this.button_Relation_Save_Click);
+            // 
+            // button_Relation_Delete
+            // 
+            this.button_Relation_Delete.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Relation_Delete.Location = new System.Drawing.Point(105, 555);
+            this.button_Relation_Delete.Name = "button_Relation_Delete";
+            this.button_Relation_Delete.Size = new System.Drawing.Size(75, 29);
+            this.button_Relation_Delete.TabIndex = 4;
+            this.button_Relation_Delete.Text = "Delete";
+            this.button_Relation_Delete.UseVisualStyleBackColor = true;
+            this.button_Relation_Delete.Click += new System.EventHandler(this.button_Relation_Delete_Click);
             // 
             // Form1
             // 
@@ -358,6 +451,8 @@
             this.panel_ClassProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            this.panel_RelationProperties.ResumeLayout(false);
+            this.panel_RelationProperties.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -391,5 +486,13 @@
         public CheckBox checkBox_Abstract;
         public Panel panel_DiagramProperties;
         public Panel panel_RelationProperties;
+        public ComboBox comboBox_Relation_Card_To;
+        public ComboBox comboBox_Relation_Card_From;
+        public ComboBox comboBox_RelationType;
+        private Label label6;
+        private Label label4;
+        private Label label3;
+        public Button button_Relation_Save;
+        public Button button_Relation_Delete;
     }
 }

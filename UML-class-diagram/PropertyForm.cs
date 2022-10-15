@@ -9,11 +9,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UML_class_diagram.Classes;
 
 namespace UML_class_diagram {
     public partial class PropertyForm : Form {
-        public string Property { get; set; } // Property so we can access it from Form1
-        public PropertyForm(string property) {
+        public Property Property { get; set; } // Property so we can access it from Form1
+        public PropertyForm(Property property) {
             InitializeComponent();
             this.Property = property;
 
@@ -26,47 +27,43 @@ namespace UML_class_diagram {
             this.comboBox_AccessModifiers.SelectedIndex = 0;
 
             // If property is empty - no need to fill
-            if (property == "")
+            if (property == null) {
+                this.Property = new();
                 return;
+            }
+            this.Property = property;
 
             // Set Access Modifier from string index [0]
-            switch (property[0]) {
-                case '-':
+            switch (this.Property.AccessMod) {
+                case AccessModifier.PRIVATE:
                     this.comboBox_AccessModifiers.SelectedIndex = 1;
                     break;
-                case '#':
+                case AccessModifier.PROTECTED:
                     this.comboBox_AccessModifiers.SelectedIndex = 2;
                     break;
+                case AccessModifier.PUBLIC:
+                default:
+                    this.comboBox_AccessModifiers.SelectedIndex = 0;
+                    break;
             }
-            // Get property without first char
-            property = property[1..];
-            // Split by ":"
-            string[] parts = property.Split(':');
-            // Set property name and trim it
-            this.textBox_PropertyName.Text = parts[0].Trim();
-            // Set property type and trim it
-            this.textBox_Type.Text = parts[1].Trim();
+            this.textBox_Type.Text = this.Property.Data.Type;
+            this.textBox_PropertyName.Text = this.Property.Data.Name;
         }
 
         private void button_OK_Click(object sender, EventArgs e) {
             if (!this.ValidateChildren())
                 return;
 
-            // Variable for whole property
-            string property = "";
+            this.Property = new();
 
             // Set char of access modifier
-            AccessModifier modifier = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;
-            property += (char)modifier;
+            this.Property.AccessMod = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;
 
-            // Add property name and trim it
-            property += this.textBox_PropertyName.Text.Trim();
+            // Set property name and trim it
+            this.Property.Data.Name = this.textBox_PropertyName.Text.Trim();
 
-            // Add divider and add property data type
-            property += " : " + this.textBox_Type.Text.Trim();
-
-            // Set property "property"
-            this.Property = property;
+            // Set property return type
+            this.Property.Data.Type = this.textBox_Type.Text.Trim();
 
             this.DialogResult = DialogResult.OK;
             this.Close();

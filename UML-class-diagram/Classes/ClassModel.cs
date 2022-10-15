@@ -6,19 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using UML_class_diagram.Classes.RelationLines;
 
 namespace UML_class_diagram.Classes {
     public class ClassModel : SelectItem {
 
         public string ClassName { get; set; } // Name of class
-        public List<string> Properties { get; set; } // List of all Properties
-        public List<string> Functions { get; set; } // List of all Functions
+        public List<Property> Properties { get; set; } // List of all Properties
+        public List<Function> Functions { get; set; } // List of all Functions
         public bool IsAbstract { get; set; } // Is it abstract
 
 
         public Point LeftTop; // Left top point for draw
+        public Point RightBottom => new Point(LeftTop.X + width, LeftTop.Y + height); // Right bottom point for draw
         private int width; // Width of class container - counted when redraw
+        public int Width => width; // Getter for width
         private int height; // Height of class container - counted when redraw
+        public int Height => height; // Getter for height
         public override bool Selected { get; set; }
 
         private DiagramSettings diagramSettings = DiagramSettings.GetInstance(); // Diagram settings for colors and fonts
@@ -31,14 +35,20 @@ namespace UML_class_diagram.Classes {
             this.Selected = true;
 
             // Testing
-            this.Properties.Add("+ asd : string");
-            this.Properties.Add("- asd: string");
-            this.Properties.Add("+ asd:string");
-            this.Properties.Add("# asd :int");
+            this.Properties.Add(new Property(AccessModifier.PUBLIC, new NameDataTypePair("asd", "string")));
+            this.Properties.Add(new Property(AccessModifier.PRIVATE, new NameDataTypePair("asd", "string")));
+            this.Properties.Add(new Property(AccessModifier.PUBLIC, new NameDataTypePair("asdddddasd", "string")));
+            this.Properties.Add(new Property(AccessModifier.PROTECTED, new NameDataTypePair("asd", "yxcyc")));
+            this.Properties.Add(new Property(AccessModifier.PUBLIC, new NameDataTypePair("asd", "int")));
 
-            this.Functions.Add("+ asd() : void");
-            this.Functions.Add("-asdasd(test : int) : int");
-            this.Functions.Add("-asdasd(test : int, asd : bool, test : array):bool");
+            this.Functions.Add(
+                new Function(AccessModifier.PUBLIC, 
+                new NameDataTypePair("func1", "void"), 
+                new List<NameDataTypePair>()));
+            this.Functions.Add(
+                new Function(AccessModifier.PUBLIC, 
+                new NameDataTypePair("func2", "void"), 
+                new List<NameDataTypePair>() { new("arg", "string"), new("arg1", "int") }));
             // /Testing
 
             // Starting position of the class container
@@ -75,9 +85,9 @@ namespace UML_class_diagram.Classes {
                 g.DrawLine(Pens.Gray, tempPoint.X, tempPoint.Y + fontHeight, tempPoint.X + width - 1, tempPoint.Y + fontHeight);
 
                 // Draw all properties
-                foreach (string item in this.Properties) {
+                foreach (var item in this.Properties) {
                     tempPoint.Y += fontHeight;
-                    g.DrawString(item, diagramSettings.ClassFont, diagramSettings.FontColor, tempPoint);
+                    g.DrawString(item.ToString(), diagramSettings.ClassFont, diagramSettings.FontColor, tempPoint);
                 }
             }
             // If there are any functions
@@ -86,17 +96,17 @@ namespace UML_class_diagram.Classes {
                 g.DrawLine(Pens.Gray, tempPoint.X, tempPoint.Y + fontHeight, tempPoint.X + width - 1, tempPoint.Y + fontHeight);
 
                 // Draw all functions
-                foreach (string item in this.Functions) {
+                foreach (var item in this.Functions) {
                     tempPoint.Y += fontHeight;
-                    g.DrawString(item, diagramSettings.ClassFont, diagramSettings.FontColor, tempPoint);
+                    g.DrawString(item.ToString(), diagramSettings.ClassFont, diagramSettings.FontColor, tempPoint);
                 }
             }
 
             // If class is selected, draw trash and arrows
             if (this.Selected) {
                 g.DrawImage(UML_class_diagram.Properties.Resources.trash, LeftTop.X + width - 20, LeftTop.Y - 25, 20, 20);
-                g.DrawImage(UML_class_diagram.Properties.Resources.up_arrow, LeftTop.X + (width / 2 - 5), LeftTop.Y - 25, 20, 20);
-                g.DrawImage(UML_class_diagram.Properties.Resources.down_arrow, LeftTop.X + (width / 2 - 5), LeftTop.Y + height + 8, 20, 20);
+                g.DrawImage(UML_class_diagram.Properties.Resources.up_arrow, LeftTop.X + (width / 2 - 10), LeftTop.Y - 25, 20, 20);
+                g.DrawImage(UML_class_diagram.Properties.Resources.down_arrow, LeftTop.X + (width / 2 - 10), LeftTop.Y + height + 8, 20, 20);
                 g.DrawImage(UML_class_diagram.Properties.Resources.left_arrow, LeftTop.X - 25, LeftTop.Y + (height / 2 - 10), 20, 20);
                 g.DrawImage(UML_class_diagram.Properties.Resources.right_arrow, LeftTop.X + width + 5, LeftTop.Y + (height / 2 - 10), 20, 20);
             }
@@ -139,14 +149,14 @@ namespace UML_class_diagram.Classes {
             int size = g.MeasureString(this.ClassName, diagramSettings.ClassFont).ToSize().Width;
 
             // Find longest size from all properties
-            foreach (string prop in this.Properties) {
-                int temp = g.MeasureString(prop, diagramSettings.ClassFont).ToSize().Width;
+            foreach (var prop in this.Properties) {
+                int temp = g.MeasureString(prop.ToString(), diagramSettings.ClassFont).ToSize().Width;
                 if (temp > size)
                     size = temp;
             }
             // Find longest size from all functions
-            foreach (string func in this.Functions) {
-                int temp = g.MeasureString(func, diagramSettings.ClassFont).ToSize().Width;
+            foreach (var func in this.Functions) {
+                int temp = g.MeasureString(func.ToString(), diagramSettings.ClassFont).ToSize().Width;
                 if (temp > size)
                     size = temp;
             }
@@ -170,6 +180,10 @@ namespace UML_class_diagram.Classes {
         }
 
         public override void FillSidebar(Form1 form) {
+            // Make sidebar visible
+            form.panel_ClassProperties.Visible = true;
+            form.panel_DiagramProperties.Visible = false;
+            form.panel_RelationProperties.Visible = false;
             // Set class name textbox to selected class name
             form.textBox_ClassName.Text = this.ClassName;
 
@@ -195,4 +209,5 @@ namespace UML_class_diagram.Classes {
         RELATION,
         DELETE
     }
+
 }
