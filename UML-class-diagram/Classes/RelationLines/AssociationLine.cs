@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace UML_class_diagram.Classes.RelationLines {
     public class AssociationLine : Line {
         public override int Index { get; set; } = 0;
-
         public override void DrawLine(Graphics g, bool selected, Point startPoint, Point endPoint, Point? breakPoint = null) {
             GraphicsPath hPath = new();
             hPath.AddLine(new Point(0, 0), new Point(4, -8));

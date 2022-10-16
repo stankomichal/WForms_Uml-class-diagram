@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace UML_class_diagram.Classes.RelationLines {
     public class InheritanceLine : Line {
         public override int Index { get; set; } = 1;
-
         public override void DrawLine(Graphics g, bool selected, Point startPoint, Point endPoint, Point? breakPoint = null) {
             GraphicsPath hPath = new();
             hPath.AddLine(new Point(0, 8), new Point(4, 0));

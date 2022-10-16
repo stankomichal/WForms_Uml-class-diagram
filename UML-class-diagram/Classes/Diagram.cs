@@ -10,21 +10,15 @@ namespace UML_class_diagram.Classes {
         public List<ClassModel> ClassList { get; set; } // List of all classes
         public List<RelationModel> RelationList { get; set; } // List of all relations
         public SelectItem CurrentlySelectedItem { get; set; } // Reference to selected class
-        public event Action deselectAction; // Action to invoke deselect in form
+        [NonSerialized]
+        public Action deselectAction; // Action to invoke deselect in form
 
         private int classCount = 1; // Count for naming new classes
         public Diagram() {
             // Setup lists
             this.ClassList = new();
             this.RelationList = new();
-            AddClass();
-            AddClass();
-            //AddClass();
-            RelationModel rel = new RelationModel(ClassList[0]);
-            RelationList.Add(rel);
-            rel.ToClass = ClassList[1];
-            ClassList[1].LeftTop = new Point(300, 300);
-            //RelationList.Add(new RelationModel(ClassList[1]));
+            DiagramSettings.GetInstance().LoadSettings();
         }
         // Add class to class list and make it selected
         public void AddClass() {
@@ -91,7 +85,7 @@ namespace UML_class_diagram.Classes {
                 }
             }
             for (int i = this.RelationList.Count - 1; i >= 0; i--) {
-                if (this.RelationList[i].ClickOnMe(x,y) == ClickType.MOVE) {
+                if (this.RelationList[i].ClickOnMe(x, y) == ClickType.MOVE) {
 
                     this.CurrentlySelectedItem = this.RelationList[i];
                     this.CurrentlySelectedItem.Selected = true;
@@ -102,7 +96,6 @@ namespace UML_class_diagram.Classes {
 
 
             // Invoke delesect Action to inform form that we want it to deselect - make sidebar invisible
-            deselectAction?.Invoke();
             return ClickType.NONE;
         }
 

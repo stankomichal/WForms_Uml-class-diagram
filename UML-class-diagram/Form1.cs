@@ -1,6 +1,8 @@
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using UML_class_diagram.Classes;
@@ -16,6 +18,7 @@ namespace UML_class_diagram {
         private bool isDragging; // Is user dragging class
         private bool isCreatingRelation; // Is user dragging class
         private bool isChanged; // If user changed anything in sidebar
+        private ExportManager exportManager = new();
         public Form1() {
             InitializeComponent();
             // Create diagram
@@ -60,6 +63,11 @@ namespace UML_class_diagram {
             this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ONE);
             this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ZEROPLUS);
             this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ONEPLUS);
+
+            this.contextMenuStrip1.Items.Add(ExportTypes.JSON.ToString());
+            this.contextMenuStrip1.Items.Add(ExportTypes.JPG.ToString());
+            this.contextMenuStrip1.Items.Add(ExportTypes.CS.ToString());
+            this.contextMenuStrip1.ItemClicked += ContextMenuStrip1_ItemClicked;
         }
 
         // Button to add class
@@ -89,12 +97,67 @@ namespace UML_class_diagram {
         }
         // Button to import
         private void button_Import_Click(object sender, EventArgs e) {
+            if (isChanged) {
+                ConfirmForm form = new ConfirmForm("You have unsaved changes.\r\nDo you want to continue?");
+                if (form.ShowDialog() != DialogResult.OK)
+                    return;
+                else {
+                    isChanged = false;
+                    this.errorProvider1.Clear();
+                }
+            }
 
+
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Json (*.json)|*.json";
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            StreamReader sr = new StreamReader(dialog.FileName);
+            string str = sr.ReadToEnd();
+
+            JsonSerializerSettings SerializerSettings = new JsonSerializerSettings();
+            SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
+
+            try {
+                Diagram? diagram = JsonConvert.DeserializeObject<Diagram>(str, SerializerSettings);
+                this.Diagram = diagram;
+                this.Diagram.deselectAction += () => {
+                    this.panel_ClassProperties.Visible = false;
+                    this.panel_RelationProperties.Visible = false;
+                    this.panel_DiagramProperties.Visible = true;
+                };
+                this.panel_ClassProperties.Visible = false;
+                this.panel_RelationProperties.Visible = false;
+                this.panel_DiagramProperties.Visible = true;
+
+            } catch (Exception) {
+
+                MessageBox.Show("This is not valid import file.", "Import failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            sr.Close();
+            this.pictureBox_Editor.Invalidate();
         }
         // Button to export
         private void button_Export_Click(object sender, EventArgs e) {
-
+            this.contextMenuStrip1.Show(this.button_Export, 0, this.button_Export.Height);
         }
+
+        private void ContextMenuStrip1_ItemClicked(object? sender, ToolStripItemClickedEventArgs e) {
+            if (e.ClickedItem.Text == "JSON") {
+                exportManager.Export(ExportTypes.JSON, this.Diagram, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height);
+            }
+            else if (e.ClickedItem.Text == "JPG") {
+                exportManager.Export(ExportTypes.JPG, this.Diagram, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height);
+            }
+            else {
+                exportManager.Export(ExportTypes.CS, this.Diagram, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height);
+            }
+            this.pictureBox_Editor.Invalidate();
+        }
+
+
 
         #region MouseHandle
         // Called first frame when user clicked inside of the paintbox
@@ -133,6 +196,11 @@ namespace UML_class_diagram {
                     break;
                 case ClickType.DELETE:
                     this.Diagram.RemoveClass();
+                    break;
+                case ClickType.NONE:
+                    this.panel_ClassProperties.Visible = false;
+                    this.panel_RelationProperties.Visible = false;
+                    this.panel_DiagramProperties.Visible = true;
                     break;
             }
 
@@ -367,6 +435,11 @@ namespace UML_class_diagram {
         private void button_Relation_Delete_Click(object sender, EventArgs e) {
             this.Diagram.RemoveRelation();
             this.pictureBox_Editor.Invalidate();
+        }
+        public enum ExportTypes {
+            JSON,
+            JPG,
+            CS
         }
     }
 }

@@ -26,6 +26,7 @@
             this.components = new System.ComponentModel.Container();
             this.button_Import = new System.Windows.Forms.Button();
             this.button_Export = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.button_Add = new System.Windows.Forms.Button();
             this.panel_ClassProperties = new System.Windows.Forms.Panel();
             this.checkBox_Abstract = new System.Windows.Forms.CheckBox();
@@ -58,8 +59,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button_Relation_Save = new System.Windows.Forms.Button();
             this.button_Relation_Delete = new System.Windows.Forms.Button();
+            this.button_Relation_Save = new System.Windows.Forms.Button();
             this.panel_ClassProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -68,6 +69,7 @@
             // 
             // button_Import
             // 
+            this.button_Import.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Import.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Import.Location = new System.Drawing.Point(993, 7);
             this.button_Import.Name = "button_Import";
@@ -79,6 +81,7 @@
             // 
             // button_Export
             // 
+            this.button_Export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button_Export.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_Export.Location = new System.Drawing.Point(1087, 7);
             this.button_Export.Name = "button_Export";
@@ -87,6 +90,13 @@
             this.button_Export.Text = "Export";
             this.button_Export.UseVisualStyleBackColor = true;
             this.button_Export.Click += new System.EventHandler(this.button_Export_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.ShowImageMargin = false;
+            this.contextMenuStrip1.Size = new System.Drawing.Size(36, 4);
             // 
             // button_Add
             // 
@@ -408,17 +418,6 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Relation type:";
             // 
-            // button_Relation_Save
-            // 
-            this.button_Relation_Save.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_Relation_Save.Location = new System.Drawing.Point(3, 555);
-            this.button_Relation_Save.Name = "button_Relation_Save";
-            this.button_Relation_Save.Size = new System.Drawing.Size(75, 29);
-            this.button_Relation_Save.TabIndex = 4;
-            this.button_Relation_Save.Text = "Save";
-            this.button_Relation_Save.UseVisualStyleBackColor = true;
-            this.button_Relation_Save.Click += new System.EventHandler(this.button_Relation_Save_Click);
-            // 
             // button_Relation_Delete
             // 
             this.button_Relation_Delete.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -429,6 +428,17 @@
             this.button_Relation_Delete.Text = "Delete";
             this.button_Relation_Delete.UseVisualStyleBackColor = true;
             this.button_Relation_Delete.Click += new System.EventHandler(this.button_Relation_Delete_Click);
+            // 
+            // button_Relation_Save
+            // 
+            this.button_Relation_Save.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_Relation_Save.Location = new System.Drawing.Point(3, 555);
+            this.button_Relation_Save.Name = "button_Relation_Save";
+            this.button_Relation_Save.Size = new System.Drawing.Size(75, 29);
+            this.button_Relation_Save.TabIndex = 4;
+            this.button_Relation_Save.Text = "Save";
+            this.button_Relation_Save.UseVisualStyleBackColor = true;
+            this.button_Relation_Save.Click += new System.EventHandler(this.button_Relation_Save_Click);
             // 
             // Form1
             // 
@@ -494,5 +504,6 @@
         private Label label3;
         public Button button_Relation_Save;
         public Button button_Relation_Delete;
+        private ContextMenuStrip contextMenuStrip1;
     }
 }

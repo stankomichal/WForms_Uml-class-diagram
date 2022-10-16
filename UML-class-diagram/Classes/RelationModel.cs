@@ -16,7 +16,7 @@ namespace UML_class_diagram.Classes {
         public ClassModel ToClass { get; set; }
         public CardinalityType CardinalityFrom { get; set; } = CardinalityType.ZEROPLUS;
         public CardinalityType CardinalityTo { get; set; } = CardinalityType.ZEROorONE;
-        public Line LineType { get; set; } = new AssociationLine();
+        public Line LineType { get; set; }
 
         private Point Start;
         private Point End;
@@ -24,6 +24,7 @@ namespace UML_class_diagram.Classes {
         private const int offset = 5;
         public RelationModel(ClassModel fromClass) {
             this.FromClass = fromClass;
+            this.Selected = true;
         }
 
         public override ClickType ClickOnMe(int x, int y) {
@@ -109,6 +110,9 @@ namespace UML_class_diagram.Classes {
         }
 
         public override void FillSidebar(Form1 form) {
+            if (this.LineType is null)
+                this.LineType = new AssociationLine();
+
             // Make sidebar visible
             form.panel_ClassProperties.Visible = false;
             form.panel_DiagramProperties.Visible = false;
@@ -117,7 +121,6 @@ namespace UML_class_diagram.Classes {
             form.comboBox_RelationType.SelectedIndex = this.LineType.Index;
 
             form.comboBox_Relation_Card_From.SelectedIndex = (int)this.CardinalityFrom;
-
             form.comboBox_Relation_Card_To.SelectedIndex = (int)this.CardinalityTo;
         }
 
@@ -125,6 +128,7 @@ namespace UML_class_diagram.Classes {
             this.End = new(x, y);
             return true;
         }
+        #region Draw
         public void Draw(Graphics g) {
             if (this.ToClass is null)
                 this.DrawUnfinished(g);
@@ -293,6 +297,8 @@ namespace UML_class_diagram.Classes {
             positionX = -1;
             return false;
         }
+        #endregion
+
     }
     public enum CardinalityType {
         NONE,
