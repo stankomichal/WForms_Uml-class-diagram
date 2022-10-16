@@ -25,7 +25,9 @@ namespace UML_class_diagram {
 
             // Select first access modifier
             this.comboBox_AccessModifiers.SelectedIndex = 0;
-
+            foreach (var item in DiagramSettings.GetInstance().ReturnTypes) {
+                this.comboBox_Type.Items.Add(item);
+            }
             // If function is empty - no need to fill
             if (function == null) {
                 this.Function = new();
@@ -45,7 +47,7 @@ namespace UML_class_diagram {
                     this.comboBox_AccessModifiers.SelectedIndex = 0;
                     break;
             }
-            this.textBox_Type.Text = this.Function.Data.Type;
+            this.comboBox_Type.Text = this.Function.Data.Type;
             this.textBox_FunctionName.Text = this.Function.Data.Name;
             this.textBox_Argument.Text = String.Join("\r\n", this.Function.Arguments);
         }
@@ -56,8 +58,8 @@ namespace UML_class_diagram {
             this.Function = new();
             this.Function.AccessMod = (AccessModifier)this.comboBox_AccessModifiers.SelectedItem;
             this.Function.Data.Name = this.textBox_FunctionName.Text.Trim();
-            if (!string.IsNullOrEmpty(this.textBox_Type.Text))
-                this.Function.Data.Type = this.textBox_Type.Text.Trim();
+            if (!string.IsNullOrEmpty(this.comboBox_Type.Text))
+                this.Function.Data.Type = this.comboBox_Type.Text.Trim();
             else
                 this.Function.Data.Type = "void";
             foreach (var item in this.textBox_Argument.Text.Trim().Trim('\r', '\n').Split("\r\n")) {
@@ -87,7 +89,7 @@ namespace UML_class_diagram {
             }
         }
         private void textBox_Type_Validating(object sender, CancelEventArgs e) {
-            TextBox tb = sender as TextBox;
+            ComboBox tb = sender as ComboBox;
             if (tb is null)
                 return;
             this.errorProvider1.SetError(tb, null);

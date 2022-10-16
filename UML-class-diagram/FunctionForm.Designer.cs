@@ -24,7 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.textBox_Type = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox_FunctionName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -38,18 +37,9 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.comboBox_Type = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // textBox_Type
-            // 
-            this.textBox_Type.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox_Type.Location = new System.Drawing.Point(145, 151);
-            this.textBox_Type.Name = "textBox_Type";
-            this.textBox_Type.Size = new System.Drawing.Size(121, 27);
-            this.textBox_Type.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.textBox_Type, "Input for return data type. Leave blank if void");
-            this.textBox_Type.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Type_Validating);
             // 
             // label3
             // 
@@ -174,16 +164,26 @@
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // comboBox_Type
+            // 
+            this.comboBox_Type.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.comboBox_Type.FormattingEnabled = true;
+            this.comboBox_Type.Location = new System.Drawing.Point(145, 152);
+            this.comboBox_Type.Name = "comboBox_Type";
+            this.comboBox_Type.Size = new System.Drawing.Size(121, 28);
+            this.comboBox_Type.TabIndex = 16;
+            this.comboBox_Type.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Type_Validating);
+            // 
             // FunctionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.ClientSize = new System.Drawing.Size(568, 300);
+            this.Controls.Add(this.comboBox_Type);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox_Argument);
-            this.Controls.Add(this.textBox_Type);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox_FunctionName);
             this.Controls.Add(this.label2);
@@ -201,8 +201,6 @@
         }
 
         #endregion
-
-        private TextBox textBox_Type;
         private Label label3;
         private TextBox textBox_FunctionName;
         private Label label2;
@@ -216,5 +214,6 @@
         private ToolTip toolTip1;
         private Label label6;
         private ErrorProvider errorProvider1;
+        private ComboBox comboBox_Type;
     }
 }

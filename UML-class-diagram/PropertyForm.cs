@@ -46,7 +46,12 @@ namespace UML_class_diagram {
                     this.comboBox_AccessModifiers.SelectedIndex = 0;
                     break;
             }
-            this.textBox_Type.Text = this.Property.Data.Type;
+            foreach (var item in DiagramSettings.GetInstance().ReturnTypes) {
+                this.comboBox_type.Items.Add(item);
+            }
+
+
+            this.comboBox_type.Text = this.Property.Data.Type;
             this.textBox_PropertyName.Text = this.Property.Data.Name;
         }
 
@@ -63,7 +68,7 @@ namespace UML_class_diagram {
             this.Property.Data.Name = this.textBox_PropertyName.Text.Trim();
 
             // Set property return type
-            this.Property.Data.Type = this.textBox_Type.Text.Trim();
+            this.Property.Data.Type = this.comboBox_type.Text.Trim();
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -87,7 +92,7 @@ namespace UML_class_diagram {
         }
 
         private void textBox_Type_Validating(object sender, CancelEventArgs e) {
-            TextBox tb = sender as TextBox;
+            ComboBox tb = sender as ComboBox;
             if (tb is null)
                 return;
             this.errorProvider1.SetError(tb, null);

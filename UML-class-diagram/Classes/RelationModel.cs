@@ -27,7 +27,7 @@ namespace UML_class_diagram.Classes {
         }
 
         public override ClickType ClickOnMe(int x, int y) {
-            if (this.Selected)
+            if (this.Selected || this.ToClass is null)
                 return ClickType.NONE;
             Point leftTop = new();
             Point rightBottom = new();
@@ -219,18 +219,18 @@ namespace UML_class_diagram.Classes {
         private void DrawUnfinished(Graphics g) {
             if (this.FromClass.LeftTop.Y <= this.End.Y && this.FromClass.RightBottom.Y >= this.End.Y) {
                 if (this.FromClass.LeftTop.X > this.End.X) {
-                    g.DrawLine(Pens.Black, this.FromClass.LeftTop.X, this.End.Y, this.End.X, this.End.Y);
+                    g.DrawLine(new Pen(Color.Black, 3), this.FromClass.LeftTop.X, this.End.Y, this.End.X, this.End.Y);
                 }
                 else {
-                    g.DrawLine(Pens.Black, this.FromClass.RightBottom.X, this.End.Y, this.End.X, this.End.Y);
+                    g.DrawLine(new Pen(Color.Black, 3), this.FromClass.RightBottom.X, this.End.Y, this.End.X, this.End.Y);
                 }
             }
             else if (this.FromClass.LeftTop.X <= this.End.X && this.FromClass.RightBottom.X >= this.End.X) {
                 if (this.FromClass.LeftTop.Y > this.End.Y) {
-                    g.DrawLine(Pens.Black, this.End.X, this.FromClass.LeftTop.Y, this.End.X, this.End.Y);
+                    g.DrawLine(new Pen(Color.Black, 3), this.End.X, this.FromClass.LeftTop.Y, this.End.X, this.End.Y);
                 }
                 else {
-                    g.DrawLine(Pens.Black, this.End.X, this.FromClass.RightBottom.Y, this.End.X, this.End.Y);
+                    g.DrawLine(new Pen(Color.Black, 3), this.End.X, this.FromClass.RightBottom.Y, this.End.X, this.End.Y);
                 }
             }
             else {
