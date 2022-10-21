@@ -13,7 +13,10 @@ using UML_class_diagram.Classes;
 
 namespace UML_class_diagram {
     public partial class PropertyForm : Form {
-        public Property Property { get; set; } // Property so we can access it from Form1
+        /// <summary>
+        /// Property so we can access it from Form1
+        /// </summary>
+        public Property Property { get; set; }
         public PropertyForm(Property property) {
             InitializeComponent();
             this.Property = property;
@@ -49,7 +52,6 @@ namespace UML_class_diagram {
             foreach (var item in DiagramSettings.GetInstance().ReturnTypes) {
                 this.comboBox_type.Items.Add(item);
             }
-
 
             this.comboBox_type.Text = this.Property.Data.Type;
             this.textBox_PropertyName.Text = this.Property.Data.Name;

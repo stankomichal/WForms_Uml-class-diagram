@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace UML_class_diagram.Classes {
     public class Function {
-        public AccessModifier AccessMod { get; set; } // Acccess modifier of the function
-        public NameDataTypePair Data { get; set; } // Function name and return data type
-        public List<NameDataTypePair> Arguments { get; set; } // List of arguments of the function
+        /// <summary>
+        /// Acccess modifier of the function
+        /// </summary>
+        public AccessModifier AccessMod { get; set; }
+        /// <summary>
+        /// Function name and return data type
+        /// </summary>
+        public NameDataTypePair Data { get; set; }
+        /// <summary>
+        /// List of arguments of the function
+        /// </summary>
+        public List<NameDataTypePair> Arguments { get; set; }
 
         public Function() {
             this.Data = new NameDataTypePair("PLACEHOLDER", "PLACEHOLDER");

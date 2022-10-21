@@ -44,6 +44,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_ClassName = new System.Windows.Forms.TextBox();
             this.panel_DiagramProperties = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dataGridView_CardinalityList = new System.Windows.Forms.DataGridView();
+            this.CardinalityTypeGrid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView_ReturnTypeList = new System.Windows.Forms.DataGridView();
+            this.ReturnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button_SettingsSave = new System.Windows.Forms.Button();
             this.pictureBox_Editor = new System.Windows.Forms.PictureBox();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -62,6 +70,9 @@
             this.button_Relation_Delete = new System.Windows.Forms.Button();
             this.button_Relation_Save = new System.Windows.Forms.Button();
             this.panel_ClassProperties.SuspendLayout();
+            this.panel_DiagramProperties.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_CardinalityList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ReturnTypeList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.panel_RelationProperties.SuspendLayout();
@@ -283,10 +294,94 @@
             this.panel_DiagramProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_DiagramProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_DiagramProperties.Controls.Add(this.label9);
+            this.panel_DiagramProperties.Controls.Add(this.label8);
+            this.panel_DiagramProperties.Controls.Add(this.label7);
+            this.panel_DiagramProperties.Controls.Add(this.dataGridView_CardinalityList);
+            this.panel_DiagramProperties.Controls.Add(this.dataGridView_ReturnTypeList);
+            this.panel_DiagramProperties.Controls.Add(this.button_SettingsSave);
             this.panel_DiagramProperties.Location = new System.Drawing.Point(632, 43);
             this.panel_DiagramProperties.Name = "panel_DiagramProperties";
             this.panel_DiagramProperties.Size = new System.Drawing.Size(185, 606);
             this.panel_DiagramProperties.TabIndex = 8;
+            // 
+            // label9
+            // 
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.label9.Location = new System.Drawing.Point(3, 516);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(177, 36);
+            this.label9.TabIndex = 7;
+            this.label9.Text = "*Unsaved settings wont be written to diagram";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label8.Location = new System.Drawing.Point(3, 285);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(91, 20);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Cardinalities";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label7.Location = new System.Drawing.Point(3, 5);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(89, 20);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "ReturnTypes";
+            // 
+            // dataGridView_CardinalityList
+            // 
+            this.dataGridView_CardinalityList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView_CardinalityList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_CardinalityList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CardinalityTypeGrid});
+            this.dataGridView_CardinalityList.Location = new System.Drawing.Point(3, 316);
+            this.dataGridView_CardinalityList.MultiSelect = false;
+            this.dataGridView_CardinalityList.Name = "dataGridView_CardinalityList";
+            this.dataGridView_CardinalityList.RowTemplate.Height = 25;
+            this.dataGridView_CardinalityList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_CardinalityList.Size = new System.Drawing.Size(177, 197);
+            this.dataGridView_CardinalityList.TabIndex = 5;
+            // 
+            // CardinalityTypeGrid
+            // 
+            this.CardinalityTypeGrid.HeaderText = "Cardinality Type";
+            this.CardinalityTypeGrid.Name = "CardinalityTypeGrid";
+            // 
+            // dataGridView_ReturnTypeList
+            // 
+            this.dataGridView_ReturnTypeList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView_ReturnTypeList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_ReturnTypeList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ReturnType});
+            this.dataGridView_ReturnTypeList.Location = new System.Drawing.Point(3, 36);
+            this.dataGridView_ReturnTypeList.MultiSelect = false;
+            this.dataGridView_ReturnTypeList.Name = "dataGridView_ReturnTypeList";
+            this.dataGridView_ReturnTypeList.RowTemplate.Height = 25;
+            this.dataGridView_ReturnTypeList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView_ReturnTypeList.Size = new System.Drawing.Size(177, 218);
+            this.dataGridView_ReturnTypeList.TabIndex = 5;
+            // 
+            // ReturnType
+            // 
+            this.ReturnType.HeaderText = "Return Type";
+            this.ReturnType.Name = "ReturnType";
+            // 
+            // button_SettingsSave
+            // 
+            this.button_SettingsSave.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_SettingsSave.Location = new System.Drawing.Point(55, 555);
+            this.button_SettingsSave.Name = "button_SettingsSave";
+            this.button_SettingsSave.Size = new System.Drawing.Size(75, 29);
+            this.button_SettingsSave.TabIndex = 4;
+            this.button_SettingsSave.Text = "Save";
+            this.button_SettingsSave.UseVisualStyleBackColor = true;
+            this.button_SettingsSave.Click += new System.EventHandler(this.button_SettingsSave_Click);
             // 
             // pictureBox_Editor
             // 
@@ -366,7 +461,6 @@
             // 
             // comboBox_Relation_Card_To
             // 
-            this.comboBox_Relation_Card_To.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Relation_Card_To.FormattingEnabled = true;
             this.comboBox_Relation_Card_To.Location = new System.Drawing.Point(26, 280);
             this.comboBox_Relation_Card_To.Name = "comboBox_Relation_Card_To";
@@ -375,7 +469,6 @@
             // 
             // comboBox_Relation_Card_From
             // 
-            this.comboBox_Relation_Card_From.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Relation_Card_From.FormattingEnabled = true;
             this.comboBox_Relation_Card_From.Location = new System.Drawing.Point(26, 161);
             this.comboBox_Relation_Card_From.Name = "comboBox_Relation_Card_From";
@@ -459,6 +552,10 @@
             this.Text = "UML Class Diagram Editor";
             this.panel_ClassProperties.ResumeLayout(false);
             this.panel_ClassProperties.PerformLayout();
+            this.panel_DiagramProperties.ResumeLayout(false);
+            this.panel_DiagramProperties.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_CardinalityList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_ReturnTypeList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Editor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.panel_RelationProperties.ResumeLayout(false);
@@ -505,5 +602,13 @@
         public Button button_Relation_Save;
         public Button button_Relation_Delete;
         private ContextMenuStrip contextMenuStrip1;
+        public Button button_SettingsSave;
+        private Label label8;
+        private Label label7;
+        private DataGridView dataGridView_CardinalityList;
+        private DataGridView dataGridView_ReturnTypeList;
+        private DataGridViewTextBoxColumn ReturnType;
+        private DataGridViewTextBoxColumn CardinalityTypeGrid;
+        private Label label9;
     }
 }

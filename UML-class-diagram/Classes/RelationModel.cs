@@ -14,8 +14,8 @@ namespace UML_class_diagram.Classes {
         private DiagramSettings diagramSettings = DiagramSettings.GetInstance(); // Diagram settings for colors and fonts
         public ClassModel FromClass { get; set; }
         public ClassModel ToClass { get; set; }
-        public CardinalityType CardinalityFrom { get; set; } = CardinalityType.ZEROPLUS;
-        public CardinalityType CardinalityTo { get; set; } = CardinalityType.ZEROorONE;
+        public string CardinalityFrom { get; set; } = "";
+        public string CardinalityTo { get; set; } = "";
         public Line LineType { get; set; }
 
         private Point Start;
@@ -120,8 +120,8 @@ namespace UML_class_diagram.Classes {
 
             form.comboBox_RelationType.SelectedIndex = this.LineType.Index;
 
-            form.comboBox_Relation_Card_From.SelectedIndex = (int)this.CardinalityFrom;
-            form.comboBox_Relation_Card_To.SelectedIndex = (int)this.CardinalityTo;
+            form.comboBox_Relation_Card_From.Text = this.CardinalityFrom;
+            form.comboBox_Relation_Card_To.Text = this.CardinalityTo;
         }
 
         public override bool Move(int x, int y, int width, int height) {
@@ -160,8 +160,8 @@ namespace UML_class_diagram.Classes {
                     this.End = new(this.ToClass.RightBottom.X, positionY);
                     this.Break = null;
                     if (this.Start.X - this.End.X > 80) {
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityFrom), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X - 30, positionY - 30);
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityTo), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, positionY - 30);
+                        g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X - 30, positionY - 30);
+                        g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, positionY - 30);
                     }
                 }
                 else if (this.FromClass.RightBottom.X < this.ToClass.LeftTop.X) {
@@ -169,8 +169,8 @@ namespace UML_class_diagram.Classes {
                     this.End = new(this.ToClass.LeftTop.X, positionY);
                     this.Break = null;
                     if (this.End.X - this.Start.X > 80) {
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityFrom), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, positionY - 30);
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityTo), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X - 30, positionY - 30);
+                        g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, positionY - 30);
+                        g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X - 30, positionY - 30);
                     }
                 }
             }
@@ -180,8 +180,8 @@ namespace UML_class_diagram.Classes {
                     this.End = new(positionX, this.ToClass.RightBottom.Y + 3);
                     this.Break = null;
                     if (this.Start.Y - this.End.Y > 60) {
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityFrom), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y - 30);
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityTo), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y + 10);
+                        g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y - 30);
+                        g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y + 10);
                     }
                 }
                 else if (this.FromClass.RightBottom.Y < this.ToClass.LeftTop.Y) {
@@ -189,8 +189,8 @@ namespace UML_class_diagram.Classes {
                     this.End = new(positionX, this.ToClass.LeftTop.Y);
                     this.Break = null;
                     if (this.End.Y - this.Start.Y > 60) {
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityFrom), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y + 10);
-                        g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityTo), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y - 30);
+                        g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y + 10);
+                        g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y - 30);
                     }
                 }
             }
@@ -207,14 +207,14 @@ namespace UML_class_diagram.Classes {
                 this.Break = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.ToClass.RightBottom.Y - (this.ToClass.Height / 2));
 
                 if (this.Start.Y > ((Point)this.Break).Y)
-                    g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityFrom), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y - 30);
+                    g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y - 30);
                 else
-                    g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityFrom), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y + 10);
+                    g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y + 10);
 
                 if (this.End.X > ((Point)this.Break).X)
-                    g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityTo), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X - 35, this.End.Y - 30);
+                    g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X - 35, this.End.Y - 30);
                 else
-                    g.DrawString(diagramSettings.GetCardinalityType(this.CardinalityTo), this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y - 30);
+                    g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y - 30);
 
             }
 
@@ -254,11 +254,6 @@ namespace UML_class_diagram.Classes {
             int botOffset = big.RightBottom.Y - small.LeftTop.Y;
 
             if (topOffset >= 0 && botOffset >= 0) {
-                //int middle = small.RightBottom.Y - small.Height / 2;
-                //if (middle > big.LeftTop.Y && middle < big.RightBottom.Y) {
-                //    positionY = middle;
-                //    return true;
-                //}
                 if (topOffset < botOffset) {
                     positionY = small.RightBottom.Y - (topOffset / 2);
                     return true;
@@ -278,11 +273,6 @@ namespace UML_class_diagram.Classes {
             int rightOffset = big.RightBottom.X - small.LeftTop.X;
 
             if (leftOffset >= 0 && rightOffset >= 0) {
-                //int middle = small.RightBottom.X - small.Width / 2;
-                //if (middle > big.LeftTop.X && middle < big.RightBottom.X) {
-                //    positionX = middle;
-                //    return true;
-                //}
                 if (leftOffset < rightOffset) {
                     positionX = small.RightBottom.X - (leftOffset / 2);
                     return true;
@@ -299,12 +289,5 @@ namespace UML_class_diagram.Classes {
         }
         #endregion
 
-    }
-    public enum CardinalityType {
-        NONE,
-        ZEROorONE,
-        ONE,
-        ZEROPLUS,
-        ONEPLUS
     }
 }

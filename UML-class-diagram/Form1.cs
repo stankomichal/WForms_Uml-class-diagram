@@ -10,20 +10,40 @@ using UML_class_diagram.Classes.RelationLines;
 
 namespace UML_class_diagram {
     public partial class Form1 : Form {
-        public Diagram Diagram { get; set; } // Instance if diagram
+        /// <summary>
+        /// Instance if diagram
+        /// </summary>
+        public Diagram Diagram { get; set; }
 
-        private int mouseX; // X position of mouse when we clicked and moved
-        private int mouseY; // Y position of mouse when we clicked and moved
+        /// <summary>
+        /// X position of mouse when we clicked and moved
+        /// </summary>
+        private int mouseX;
+        /// <summary>
+        /// Y position of mouse when we clicked and moved
+        /// </summary>
+        private int mouseY;
 
-        private bool isDragging; // Is user dragging class
-        private bool isCreatingRelation; // Is user dragging class
-        private bool isChanged; // If user changed anything in sidebar
+        /// <summary>
+        /// Is user dragging class
+        /// </summary>
+        private bool isDragging;
+        /// <summary>
+        /// Is user dragging class
+        /// </summary>
+        private bool isCreatingRelation;
+        /// <summary>
+        /// If user changed anything in sidebar
+        /// </summary>
+        private bool isChanged;
+        /// <summary>
+        /// Instance of an export manager
+        /// </summary>
         private ExportManager exportManager = new();
         public Form1() {
             InitializeComponent();
             // Create diagram
             this.Diagram = new();
-
             // Correct panels positions
             this.panel_DiagramProperties.Left = this.panel_ClassProperties.Left;
             this.panel_DiagramProperties.Top = this.panel_ClassProperties.Top;
@@ -52,22 +72,21 @@ namespace UML_class_diagram {
             this.comboBox_RelationType.Items.Add(RelationType.AGGREGATION);
             this.comboBox_RelationType.Items.Add(RelationType.COMPOSITION);
 
-            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.NONE);
-            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ZEROorONE);
-            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ONE);
-            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ZEROPLUS);
-            this.comboBox_Relation_Card_From.Items.Add(CardinalityType.ONEPLUS);
 
-            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.NONE);
-            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ZEROorONE);
-            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ONE);
-            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ZEROPLUS);
-            this.comboBox_Relation_Card_To.Items.Add(CardinalityType.ONEPLUS);
 
             this.contextMenuStrip1.Items.Add(ExportTypes.JSON.ToString());
             this.contextMenuStrip1.Items.Add(ExportTypes.JPG.ToString());
             this.contextMenuStrip1.Items.Add(ExportTypes.CS.ToString());
             this.contextMenuStrip1.ItemClicked += ContextMenuStrip1_ItemClicked;
+
+            foreach (string item in DiagramSettings.GetInstance().ReturnTypes) {
+                this.dataGridView_ReturnTypeList.Rows.Add(item);
+            }
+            foreach (string item in DiagramSettings.GetInstance().CardinalityTypes) {
+                this.dataGridView_CardinalityList.Rows.Add(item);
+            }
+
+            this.FillCardinality();
         }
 
         // Button to add class
@@ -165,7 +184,7 @@ namespace UML_class_diagram {
             // If clicked button is not left - return
             if (e.Button != MouseButtons.Left)
                 return;
-            // If we have changed anything - form to inform user about it
+            // If we changed anything - form to inform user about it
             if (isChanged) {
                 ConfirmForm form = new ConfirmForm("You have unsaved changes.\r\nDo you want to continue?");
                 if (form.ShowDialog() != DialogResult.OK)
@@ -233,11 +252,9 @@ namespace UML_class_diagram {
                 // Get offset of cursor movement
                 int offsetX = e.X - mouseX;
                 int offsetY = e.Y - mouseY;
-                // Call move method on selected class
-                if (!this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height)) {
+                this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height);
 
-                    //return;
-                }
+
                 // Set cursor positions
                 mouseX += offsetX;
                 mouseY += offsetY;
@@ -426,8 +443,8 @@ namespace UML_class_diagram {
             if (relModel is null)
                 return;
             relModel.LineType = Line.GetLine((RelationType)this.comboBox_RelationType.SelectedItem);
-            relModel.CardinalityFrom = (CardinalityType)this.comboBox_Relation_Card_From.SelectedItem;
-            relModel.CardinalityTo = (CardinalityType)this.comboBox_Relation_Card_To.SelectedItem;
+            relModel.CardinalityFrom = this.comboBox_Relation_Card_From.Text;
+            relModel.CardinalityTo = this.comboBox_Relation_Card_To.Text;
             this.isChanged = false;
             this.pictureBox_Editor.Invalidate();
         }
@@ -436,6 +453,54 @@ namespace UML_class_diagram {
             this.Diagram.RemoveRelation();
             this.pictureBox_Editor.Invalidate();
         }
+
+
+        private void button_SettingsSave_Click(object sender, EventArgs e) {
+            List<string> returnTypes = new();
+            List<string> cardinalityList = new();
+            this.dataGridView_ReturnTypeList.CommitEdit(DataGridViewDataErrorContexts.Display);
+            dataGridView_CardinalityList.CommitEdit(DataGridViewDataErrorContexts.Display);
+            foreach (DataGridViewRow returnType in this.dataGridView_ReturnTypeList.Rows) {
+                if (returnType.IsNewRow) continue;
+                string temp = returnType.Cells[0].Value.ToString();
+                if (returnTypes.Contains(temp)) {
+                    MessageBox.Show("All return types have to be unique!");
+                    return;
+                }
+                returnTypes.Add(temp);
+            }
+            foreach (DataGridViewRow cardinalityType in this.dataGridView_CardinalityList.Rows) {
+                if (cardinalityType.IsNewRow) continue;
+                string temp = cardinalityType.Cells[0].Value.ToString();
+                if (cardinalityList.Contains(temp)) {
+                    MessageBox.Show("All return types have to be unique!");
+                    return;
+                }
+                cardinalityList.Add(temp);
+            }
+            if (returnTypes.Contains("")) {
+                MessageBox.Show("Return type cant be empty!");
+                return;
+            }
+            DiagramSettings.GetInstance().ReturnTypes = returnTypes;
+            DiagramSettings.GetInstance().CardinalityTypes = cardinalityList;
+            DiagramSettings.GetInstance().SaveSettings();
+            MessageBox.Show("Settings saved successfully!");
+            this.FillCardinality();
+        }
+
+        private void FillCardinality() {
+            this.comboBox_Relation_Card_From.Items.Clear();
+            this.comboBox_Relation_Card_To.Items.Clear();
+            foreach (var item in DiagramSettings.GetInstance().CardinalityTypes) {
+                this.comboBox_Relation_Card_From.Items.Add(item);
+            }
+            foreach (var item in DiagramSettings.GetInstance().CardinalityTypes) {
+                this.comboBox_Relation_Card_To.Items.Add(item);
+            }
+        }
+
+
         public enum ExportTypes {
             JSON,
             JPG,

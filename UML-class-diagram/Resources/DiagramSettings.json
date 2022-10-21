@@ -1,0 +1,36 @@
+{
+  "$type": "UML_class_diagram.Classes.DiagramSettings, UML-class-diagram",
+  "ClassFont": "Microsoft Sans Serif, 12pt",
+  "AbstractClassFont": "Microsoft Sans Serif, 12pt, style=Italic",
+  "FontColor": {
+    "$type": "System.Drawing.SolidBrush, System.Drawing.Common",
+    "Color": "DarkSlateGray"
+  },
+  "ClassColor": {
+    "$type": "System.Drawing.SolidBrush, System.Drawing.Common",
+    "Color": "LightBlue"
+  },
+  "SelectClassColor": {
+    "$type": "System.Drawing.SolidBrush, System.Drawing.Common",
+    "Color": "LightCoral"
+  },
+  "RelationColor": "Black",
+  "RelationColorSelected": "Brown",
+  "ReturnTypes": [
+    "string",
+    "bool",
+    "char",
+    "int",
+    "long",
+    "double",
+    "float",
+    "void"
+  ],
+  "CardinalityTypes": [
+    "",
+    "0..1",
+    "1",
+    "0..*",
+    "1..*"
+  ]
+}

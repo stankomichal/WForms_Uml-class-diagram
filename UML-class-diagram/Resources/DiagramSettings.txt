@@ -1,1 +1,0 @@
-{"ClassFont":"Microsoft Sans Serif, 12pt","AbstractClassFont":"Microsoft Sans Serif, 12pt, style=Italic","FontColor":{"Color":"DarkSlateGray"},"ClassColor":{"Color":"LightBlue"},"SelectClassColor":{"Color":"LightCoral"},"RelationColor":"Black","RelationColorSelected":"Brown","ReturnTypes":["string","bool","char","int","long","double","float"]}

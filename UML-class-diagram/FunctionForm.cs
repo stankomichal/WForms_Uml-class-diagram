@@ -14,7 +14,10 @@ using UML_class_diagram.Classes;
 
 namespace UML_class_diagram {
     public partial class FunctionForm : Form {
-        public Function Function { get; set; } // Function so we can access it from Form1
+        /// <summary>
+        /// Function so we can access it from Form1
+        /// </summary>
+        public Function Function { get; set; }
         public FunctionForm(Function function) {
             InitializeComponent();
 
@@ -25,6 +28,8 @@ namespace UML_class_diagram {
 
             // Select first access modifier
             this.comboBox_AccessModifiers.SelectedIndex = 0;
+
+            List<string> test = DiagramSettings.GetInstance().ReturnTypes;
             foreach (var item in DiagramSettings.GetInstance().ReturnTypes) {
                 this.comboBox_Type.Items.Add(item);
             }
@@ -63,6 +68,8 @@ namespace UML_class_diagram {
             else
                 this.Function.Data.Type = "void";
             foreach (var item in this.textBox_Argument.Text.Trim().Trim('\r', '\n').Split("\r\n")) {
+                if (item == "")
+                    continue;
                 string[] parts = item.Split(" : ");
                 this.Function.Arguments.Add(new(parts[0], parts[1]));
             }
@@ -71,12 +78,11 @@ namespace UML_class_diagram {
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
         private void button_Cancel_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-
+        
         private void textBox_FunctionName_Validating(object sender, CancelEventArgs e) {
             TextBox tb = sender as TextBox;
             if (tb is null)
