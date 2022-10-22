@@ -29,12 +29,14 @@ namespace UML_class_diagram.Classes {
         /// Count for naming new classes
         /// </summary>
         private int classCount = 1;
-
+        [NonSerialized]
+        public Size offset;
 
         public Diagram() {
             // Setup lists
             this.ClassList = new();
             this.RelationList = new();
+            this.offset = new();
             DiagramSettings.GetInstance().LoadSettings();
         }
 
@@ -94,7 +96,7 @@ namespace UML_class_diagram.Classes {
         /// <param name="g">Graphics</param>
         public void Draw(Graphics g) {
             foreach (var classModel in this.ClassList) {
-                classModel.Draw(g);
+                classModel.Draw(g, offset);
             }
             foreach (var relationModel in this.RelationList) {
                 relationModel.Draw(g);

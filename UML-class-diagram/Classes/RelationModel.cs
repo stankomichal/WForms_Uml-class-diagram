@@ -150,23 +150,23 @@ namespace UML_class_diagram.Classes {
                 smallerClass = this.FromClass;
             }
 
-            if (smallerClass.RightBottom.X >= biggerClass.LeftTop.X && smallerClass.LeftTop.X <= biggerClass.RightBottom.X)
-                if (smallerClass.RightBottom.Y >= biggerClass.LeftTop.Y && smallerClass.LeftTop.Y <= biggerClass.RightBottom.Y)
+            if (smallerClass.RightBottomWithOffset.X >= biggerClass.LeftTopWithOffset.X && smallerClass.LeftTopWithOffset.X <= biggerClass.RightBottomWithOffset.X)
+                if (smallerClass.RightBottomWithOffset.Y >= biggerClass.LeftTopWithOffset.Y && smallerClass.LeftTopWithOffset.Y <= biggerClass.RightBottomWithOffset.Y)
                     return;
 
             if (CalculateLeftRight(biggerClass, smallerClass, out int positionY) == true) {
-                if (this.FromClass.LeftTop.X > this.ToClass.RightBottom.X) {
-                    this.Start = new(this.FromClass.LeftTop.X, positionY);
-                    this.End = new(this.ToClass.RightBottom.X, positionY);
+                if (this.FromClass.LeftTopWithOffset.X > this.ToClass.RightBottomWithOffset.X) {
+                    this.Start = new(this.FromClass.LeftTopWithOffset.X, positionY);
+                    this.End = new(this.ToClass.RightBottomWithOffset.X, positionY);
                     this.Break = null;
                     if (this.Start.X - this.End.X > 80) {
                         g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X - 30, positionY - 30);
                         g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, positionY - 30);
                     }
                 }
-                else if (this.FromClass.RightBottom.X < this.ToClass.LeftTop.X) {
-                    this.Start = new(this.FromClass.RightBottom.X, positionY);
-                    this.End = new(this.ToClass.LeftTop.X, positionY);
+                else if (this.FromClass.RightBottomWithOffset.X < this.ToClass.LeftTopWithOffset.X) {
+                    this.Start = new(this.FromClass.RightBottomWithOffset.X, positionY);
+                    this.End = new(this.ToClass.LeftTopWithOffset.X, positionY);
                     this.Break = null;
                     if (this.End.X - this.Start.X > 80) {
                         g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, positionY - 30);
@@ -175,18 +175,18 @@ namespace UML_class_diagram.Classes {
                 }
             }
             else if (CalculateTopBottom(biggerClass, smallerClass, out int positionX) == true) {
-                if (this.FromClass.LeftTop.Y > this.ToClass.RightBottom.Y) {
-                    this.Start = new(positionX, this.FromClass.LeftTop.Y);
-                    this.End = new(positionX, this.ToClass.RightBottom.Y + 3);
+                if (this.FromClass.LeftTopWithOffset.Y > this.ToClass.RightBottomWithOffset.Y) {
+                    this.Start = new(positionX, this.FromClass.LeftTopWithOffset.Y);
+                    this.End = new(positionX, this.ToClass.RightBottomWithOffset.Y + 3);
                     this.Break = null;
                     if (this.Start.Y - this.End.Y > 60) {
                         g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y - 30);
                         g.DrawString(this.CardinalityTo, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.End.X + 10, this.End.Y + 10);
                     }
                 }
-                else if (this.FromClass.RightBottom.Y < this.ToClass.LeftTop.Y) {
-                    this.Start = new(positionX, this.FromClass.RightBottom.Y + 3);
-                    this.End = new(positionX, this.ToClass.LeftTop.Y);
+                else if (this.FromClass.RightBottomWithOffset.Y < this.ToClass.LeftTopWithOffset.Y) {
+                    this.Start = new(positionX, this.FromClass.RightBottomWithOffset.Y + 3);
+                    this.End = new(positionX, this.ToClass.LeftTopWithOffset.Y);
                     this.Break = null;
                     if (this.End.Y - this.Start.Y > 60) {
                         g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y + 10);
@@ -195,16 +195,16 @@ namespace UML_class_diagram.Classes {
                 }
             }
             else {
-                if (this.FromClass.RightBottom.X < this.ToClass.LeftTop.X)
-                    this.End = new(this.ToClass.LeftTop.X, this.ToClass.RightBottom.Y - (this.ToClass.Height / 2));
+                if (this.FromClass.RightBottomWithOffset.X < this.ToClass.LeftTopWithOffset.X)
+                    this.End = new(this.ToClass.LeftTopWithOffset.X, this.ToClass.RightBottomWithOffset.Y - (this.ToClass.Height / 2));
                 else
-                    this.End = new(this.ToClass.RightBottom.X, this.ToClass.RightBottom.Y - (this.ToClass.Height / 2));
+                    this.End = new(this.ToClass.RightBottomWithOffset.X, this.ToClass.RightBottomWithOffset.Y - (this.ToClass.Height / 2));
 
-                if (this.FromClass.RightBottom.Y < this.ToClass.LeftTop.Y)
-                    this.Start = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.FromClass.RightBottom.Y + 2);
+                if (this.FromClass.RightBottomWithOffset.Y < this.ToClass.LeftTopWithOffset.Y)
+                    this.Start = new(this.FromClass.RightBottomWithOffset.X - (this.FromClass.Width / 2), this.FromClass.RightBottomWithOffset.Y + 2);
                 else
-                    this.Start = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.FromClass.LeftTop.Y);
-                this.Break = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.ToClass.RightBottom.Y - (this.ToClass.Height / 2));
+                    this.Start = new(this.FromClass.RightBottomWithOffset.X - (this.FromClass.Width / 2), this.FromClass.LeftTopWithOffset.Y);
+                this.Break = new(this.FromClass.RightBottomWithOffset.X - (this.FromClass.Width / 2), this.ToClass.RightBottomWithOffset.Y - (this.ToClass.Height / 2));
 
                 if (this.Start.Y > ((Point)this.Break).Y)
                     g.DrawString(this.CardinalityFrom, this.diagramSettings.ClassFont, this.diagramSettings.FontColor, this.Start.X + 10, this.Start.Y - 30);
@@ -221,46 +221,46 @@ namespace UML_class_diagram.Classes {
             this.LineType.DrawLine(g, this.Selected, this.Start, this.End, this.Break);
         }
         private void DrawUnfinished(Graphics g) {
-            if (this.FromClass.LeftTop.Y <= this.End.Y && this.FromClass.RightBottom.Y >= this.End.Y) {
-                if (this.FromClass.LeftTop.X > this.End.X) {
-                    g.DrawLine(new Pen(Color.Black, 3), this.FromClass.LeftTop.X, this.End.Y, this.End.X, this.End.Y);
+            if (this.FromClass.LeftTopWithOffset.Y <= this.End.Y && this.FromClass.RightBottomWithOffset.Y >= this.End.Y) {
+                if (this.FromClass.LeftTopWithOffset.X > this.End.X) {
+                    g.DrawLine(new Pen(Color.Black, 3), this.FromClass.LeftTopWithOffset.X, this.End.Y, this.End.X, this.End.Y);
                 }
                 else {
-                    g.DrawLine(new Pen(Color.Black, 3), this.FromClass.RightBottom.X, this.End.Y, this.End.X, this.End.Y);
+                    g.DrawLine(new Pen(Color.Black, 3), this.FromClass.RightBottomWithOffset.X, this.End.Y, this.End.X, this.End.Y);
                 }
             }
-            else if (this.FromClass.LeftTop.X <= this.End.X && this.FromClass.RightBottom.X >= this.End.X) {
-                if (this.FromClass.LeftTop.Y > this.End.Y) {
-                    g.DrawLine(new Pen(Color.Black, 3), this.End.X, this.FromClass.LeftTop.Y, this.End.X, this.End.Y);
+            else if (this.FromClass.LeftTopWithOffset.X <= this.End.X && this.FromClass.RightBottomWithOffset.X >= this.End.X) {
+                if (this.FromClass.LeftTopWithOffset.Y > this.End.Y) {
+                    g.DrawLine(new Pen(Color.Black, 3), this.End.X, this.FromClass.LeftTopWithOffset.Y, this.End.X, this.End.Y);
                 }
                 else {
-                    g.DrawLine(new Pen(Color.Black, 3), this.End.X, this.FromClass.RightBottom.Y, this.End.X, this.End.Y);
+                    g.DrawLine(new Pen(Color.Black, 3), this.End.X, this.FromClass.RightBottomWithOffset.Y, this.End.X, this.End.Y);
                 }
             }
             else {
-                if (this.FromClass.RightBottom.Y < this.End.Y)
-                    this.Start = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.FromClass.RightBottom.Y);
+                if (this.FromClass.RightBottomWithOffset.Y < this.End.Y)
+                    this.Start = new(this.FromClass.RightBottomWithOffset.X - (this.FromClass.Width / 2), this.FromClass.RightBottomWithOffset.Y);
                 else
-                    this.Start = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.FromClass.LeftTop.Y);
+                    this.Start = new(this.FromClass.RightBottomWithOffset.X - (this.FromClass.Width / 2), this.FromClass.LeftTopWithOffset.Y);
 
-                this.Break = new(this.FromClass.RightBottom.X - (this.FromClass.Width / 2), this.End.Y);
+                this.Break = new(this.FromClass.RightBottomWithOffset.X - (this.FromClass.Width / 2), this.End.Y);
 
                 g.DrawLines(new Pen(Color.Black, 3), new PointF[] { this.Start, (Point)this.Break, this.End });
             }
 
         }
         public bool CalculateLeftRight(ClassModel big, ClassModel small, out int positionY) {
-            int topOffset = small.RightBottom.Y - big.LeftTop.Y;
-            int botOffset = big.RightBottom.Y - small.LeftTop.Y;
+            int topOffset = small.RightBottomWithOffset.Y - big.LeftTopWithOffset.Y;
+            int botOffset = big.RightBottomWithOffset.Y - small.LeftTopWithOffset.Y;
 
             if (topOffset >= 0 && botOffset >= 0) {
                 if (topOffset < botOffset) {
-                    positionY = small.RightBottom.Y - (topOffset / 2);
+                    positionY = small.RightBottomWithOffset.Y - (topOffset / 2);
                     return true;
 
                 }
                 else {
-                    positionY = big.RightBottom.Y - (botOffset / 2);
+                    positionY = big.RightBottomWithOffset.Y - (botOffset / 2);
                     return true;
                 }
 
@@ -269,17 +269,17 @@ namespace UML_class_diagram.Classes {
             return false;
         }
         public bool CalculateTopBottom(ClassModel big, ClassModel small, out int positionX) {
-            int leftOffset = small.RightBottom.X - big.LeftTop.X;
-            int rightOffset = big.RightBottom.X - small.LeftTop.X;
+            int leftOffset = small.RightBottomWithOffset.X - big.LeftTopWithOffset.X;
+            int rightOffset = big.RightBottomWithOffset.X - small.LeftTopWithOffset.X;
 
             if (leftOffset >= 0 && rightOffset >= 0) {
                 if (leftOffset < rightOffset) {
-                    positionX = small.RightBottom.X - (leftOffset / 2);
+                    positionX = small.RightBottomWithOffset.X - (leftOffset / 2);
                     return true;
 
                 }
                 else {
-                    positionX = big.RightBottom.X - (rightOffset / 2);
+                    positionX = big.RightBottomWithOffset.X - (rightOffset / 2);
                     return true;
                 }
 

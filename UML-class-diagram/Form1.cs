@@ -29,6 +29,11 @@ namespace UML_class_diagram {
         /// </summary>
         private bool isDragging;
         /// <summary>
+        /// Is user moving diagram
+        /// </summary>
+        private bool isMoving;
+
+        /// <summary>
         /// Is user dragging class
         /// </summary>
         private bool isCreatingRelation;
@@ -72,8 +77,6 @@ namespace UML_class_diagram {
             this.comboBox_RelationType.Items.Add(RelationType.AGGREGATION);
             this.comboBox_RelationType.Items.Add(RelationType.COMPOSITION);
 
-
-
             this.contextMenuStrip1.Items.Add(ExportTypes.JSON.ToString());
             this.contextMenuStrip1.Items.Add(ExportTypes.JPG.ToString());
             this.contextMenuStrip1.Items.Add(ExportTypes.CS.ToString());
@@ -85,7 +88,7 @@ namespace UML_class_diagram {
             foreach (string item in DiagramSettings.GetInstance().CardinalityTypes) {
                 this.dataGridView_CardinalityList.Rows.Add(item);
             }
-
+            SetPositionLabels();
             this.FillCardinality();
         }
 
@@ -139,7 +142,7 @@ namespace UML_class_diagram {
             SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
 
             try {
-                Diagram? diagram = JsonConvert.DeserializeObject<Diagram>(str, SerializerSettings);
+                Diagram diagram = JsonConvert.DeserializeObject<Diagram>(str, SerializerSettings);
                 this.Diagram = diagram;
                 this.Diagram.deselectAction += () => {
                     this.panel_ClassProperties.Visible = false;
@@ -149,6 +152,8 @@ namespace UML_class_diagram {
                 this.panel_ClassProperties.Visible = false;
                 this.panel_RelationProperties.Visible = false;
                 this.panel_DiagramProperties.Visible = true;
+                this.Diagram.offset = new();
+                this.SetPositionLabels();
 
             } catch (Exception) {
 
@@ -220,6 +225,9 @@ namespace UML_class_diagram {
                     this.panel_ClassProperties.Visible = false;
                     this.panel_RelationProperties.Visible = false;
                     this.panel_DiagramProperties.Visible = true;
+                    mouseX = e.X;
+                    mouseY = e.Y;
+                    this.isMoving = true;
                     break;
             }
 
@@ -235,25 +243,32 @@ namespace UML_class_diagram {
                     // If we have cursor on relation arrow or on delete icon - change cursor
                     case ClickType.RELATION:
                     case ClickType.DELETE:
-                        System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Hand;
+                        Cursor.Current = Cursors.Hand;
                         break;
                 }
             }
             // If clicked button is not left - return
             // If user is not dragging - return
             // If user is not creating relation - return
-            if ((!this.isDragging && !this.isCreatingRelation) || e.Button != MouseButtons.Left)
+            if (e.Button != MouseButtons.Left )
                 return;
-
-            if (this.isCreatingRelation && e.Button == MouseButtons.Left) {
+            if (!this.isMoving && !this.isDragging && !this.isCreatingRelation)
+                return;
+            if (this.isCreatingRelation) {
                 this.Diagram.RelationList.Last().Move(e.X, e.Y, 1, 1);
             }
             else {
                 // Get offset of cursor movement
                 int offsetX = e.X - mouseX;
                 int offsetY = e.Y - mouseY;
-                this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height);
-
+                if (isDragging)
+                    this.Diagram.CurrentlySelectedItem.Move(offsetX, offsetY, this.pictureBox_Editor.Width, this.pictureBox_Editor.Height);
+                else {
+                    this.Diagram.offset.Width += offsetX;
+                    this.Diagram.offset.Height += offsetY;
+                    Cursor.Current = Cursors.Hand;
+                    SetPositionLabels();
+                }
 
                 // Set cursor positions
                 mouseX += offsetX;
@@ -307,6 +322,7 @@ namespace UML_class_diagram {
 
             // Set dragging to false
             this.isDragging = false;
+            this.isMoving = false;
         }
         #endregion
         // Called when picture box is needed to be repainted
@@ -500,11 +516,19 @@ namespace UML_class_diagram {
             }
         }
 
-
-        public enum ExportTypes {
-            JSON,
-            JPG,
-            CS
+        private void button_Reset_Click(object sender, EventArgs e) {
+            this.Diagram.offset = new Size();
+            SetPositionLabels();
+            this.pictureBox_Editor.Invalidate();
         }
+        private void SetPositionLabels() {
+            this.label_PosX.Text = "x: " + this.Diagram.offset.Width * -1;
+            this.label_PosY.Text = "y: " + this.Diagram.offset.Height * -1;
+        }
+    }
+    public enum ExportTypes {
+        JSON,
+        JPG,
+        CS
     }
 }

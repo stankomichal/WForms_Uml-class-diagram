@@ -69,6 +69,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button_Relation_Delete = new System.Windows.Forms.Button();
             this.button_Relation_Save = new System.Windows.Forms.Button();
+            this.button_Reset = new System.Windows.Forms.Button();
+            this.label_PosX = new System.Windows.Forms.Label();
+            this.label_PosY = new System.Windows.Forms.Label();
             this.panel_ClassProperties.SuspendLayout();
             this.panel_DiagramProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_CardinalityList)).BeginInit();
@@ -533,12 +536,46 @@
             this.button_Relation_Save.UseVisualStyleBackColor = true;
             this.button_Relation_Save.Click += new System.EventHandler(this.button_Relation_Save_Click);
             // 
+            // button_Reset
+            // 
+            this.button_Reset.BackColor = System.Drawing.Color.Transparent;
+            this.button_Reset.BackgroundImage = global::UML_class_diagram.Properties.Resources.reset;
+            this.button_Reset.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button_Reset.ForeColor = System.Drawing.Color.Transparent;
+            this.button_Reset.Location = new System.Drawing.Point(196, 43);
+            this.button_Reset.Name = "button_Reset";
+            this.button_Reset.Size = new System.Drawing.Size(40, 40);
+            this.button_Reset.TabIndex = 9;
+            this.button_Reset.UseVisualStyleBackColor = false;
+            this.button_Reset.Click += new System.EventHandler(this.button_Reset_Click);
+            // 
+            // label_PosX
+            // 
+            this.label_PosX.AutoSize = true;
+            this.label_PosX.Location = new System.Drawing.Point(202, 93);
+            this.label_PosX.Name = "label_PosX";
+            this.label_PosX.Size = new System.Drawing.Size(44, 15);
+            this.label_PosX.TabIndex = 10;
+            this.label_PosX.Text = "label10";
+            // 
+            // label_PosY
+            // 
+            this.label_PosY.AutoSize = true;
+            this.label_PosY.Location = new System.Drawing.Point(200, 123);
+            this.label_PosY.Name = "label_PosY";
+            this.label_PosY.Size = new System.Drawing.Size(44, 15);
+            this.label_PosY.TabIndex = 11;
+            this.label_PosY.Text = "label11";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.ClientSize = new System.Drawing.Size(1184, 661);
+            this.Controls.Add(this.label_PosY);
+            this.Controls.Add(this.label_PosX);
+            this.Controls.Add(this.button_Reset);
             this.Controls.Add(this.panel_DiagramProperties);
             this.Controls.Add(this.panel_RelationProperties);
             this.Controls.Add(this.panel_ClassProperties);
@@ -561,6 +598,7 @@
             this.panel_RelationProperties.ResumeLayout(false);
             this.panel_RelationProperties.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -610,5 +648,8 @@
         private DataGridViewTextBoxColumn ReturnType;
         private DataGridViewTextBoxColumn CardinalityTypeGrid;
         private Label label9;
+        private Button button_Reset;
+        private Label label_PosY;
+        private Label label_PosX;
     }
 }

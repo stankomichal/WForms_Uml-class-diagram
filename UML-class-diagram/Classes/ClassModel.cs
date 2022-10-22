@@ -31,10 +31,12 @@ namespace UML_class_diagram.Classes {
         /// Left top point for draw
         /// </summary>
         public Point LeftTop;
+
+        public Point LeftTopWithOffset => new Point(LeftTop.X + pictureBoxOffset.Width, LeftTop.Y + pictureBoxOffset.Height);
         /// <summary>
         /// Right bottom point for draw
         /// </summary>
-        public Point RightBottom => new Point(LeftTop.X + width, LeftTop.Y + height);
+        public Point RightBottomWithOffset => new Point(LeftTopWithOffset.X + width, LeftTopWithOffset.Y + height);
         /// <summary>
         /// Width of class container - counted when redraw
         /// </summary>
@@ -59,7 +61,7 @@ namespace UML_class_diagram.Classes {
         /// Diagram settings for colors and fonts
         /// </summary>
         private DiagramSettings diagramSettings = DiagramSettings.GetInstance();
-
+        private Size pictureBoxOffset = new();
         #region Images
         private readonly Image imageTrash = UML_class_diagram.Properties.Resources.trash;
         private readonly Image imageUp = UML_class_diagram.Properties.Resources.up_arrow;
@@ -104,7 +106,8 @@ namespace UML_class_diagram.Classes {
         /// <param name="g">Graphics</param>
         /// <param name="xOffset">X offset of the diagram to move starting positions</param>
         /// <param name="yOffset">Y offset of the diagram to move starting positions</param>
-        public void Draw(Graphics g) {
+        public void Draw(Graphics g, Size pictureBoxOffset) {
+            this.pictureBoxOffset = pictureBoxOffset;
             // Measure height of the font
             int fontHeight = g.MeasureString(this.ClassName, diagramSettings.ClassFont).ToSize().Height;
             // Measure width of the longest string
@@ -113,7 +116,7 @@ namespace UML_class_diagram.Classes {
             // Measure height with font Height and number of lines
             height = fontHeight * (1 + this.Properties.Count + this.Functions.Count);
             // Temporary point to have point where to draw
-            Point tempPoint = LeftTop;
+            Point tempPoint = LeftTopWithOffset;
             // Find position X to middle class name
             int nameX = (tempPoint.X + (width / 2)) - (g.MeasureString(this.ClassName, diagramSettings.ClassFont).ToSize().Width / 2);
 
@@ -149,11 +152,11 @@ namespace UML_class_diagram.Classes {
 
             // If class is selected, draw trash and arrows
             if (this.Selected) {
-                g.DrawImage(imageTrash, LeftTop.X + width - 20, LeftTop.Y - 25, 20, 20);
-                g.DrawImage(imageUp, LeftTop.X + (width / 2 - 10), LeftTop.Y - 25, 20, 20);
-                g.DrawImage(imageDown, LeftTop.X + (width / 2 - 10), LeftTop.Y + height + 8, 20, 20);
-                g.DrawImage(imageLeft, LeftTop.X - 25, LeftTop.Y + (height / 2 - 10), 20, 20);
-                g.DrawImage(imageRight, LeftTop.X + width + 5, LeftTop.Y + (height / 2 - 10), 20, 20);
+                g.DrawImage(imageTrash, LeftTopWithOffset.X + width - 20, LeftTopWithOffset.Y - 25, 20, 20);
+                g.DrawImage(imageUp, LeftTopWithOffset.X + (width / 2 - 10), LeftTopWithOffset.Y - 25, 20, 20);
+                g.DrawImage(imageDown, LeftTopWithOffset.X + (width / 2 - 10), LeftTopWithOffset.Y + height + 8, 20, 20);
+                g.DrawImage(imageLeft, LeftTopWithOffset.X - 25, LeftTopWithOffset.Y + (height / 2 - 10), 20, 20);
+                g.DrawImage(imageRight, LeftTopWithOffset.X + width + 5, LeftTopWithOffset.Y + (height / 2 - 10), 20, 20);
             }
         }
         /// <summary>
@@ -164,29 +167,29 @@ namespace UML_class_diagram.Classes {
         /// <returns></returns>
         public override ClickType ClickOnMe(int x, int y) {
             // If clicked inside of the container - MOVE
-            if ((x >= LeftTop.X && x <= LeftTop.X + width) && (y >= LeftTop.Y && y <= LeftTop.Y + height))
+            if ((x >= LeftTopWithOffset.X && x <= LeftTopWithOffset.X + width) && (y >= LeftTopWithOffset.Y && y <= LeftTopWithOffset.Y + height))
                 return ClickType.MOVE;
 
             // If the class is selected - another conditions for icons
             if (this.Selected) {
                 // If we clicked on trash icon - DELETE
-                if ((x >= LeftTop.X + width - 20 && x <= LeftTop.X + width) && (y >= LeftTop.Y - 25 && y <= LeftTop.Y - 5))
+                if ((x >= LeftTopWithOffset.X + width - 20 && x <= LeftTopWithOffset.X + width) && (y >= LeftTopWithOffset.Y - 25 && y <= LeftTopWithOffset.Y - 5))
                     return ClickType.DELETE;
 
                 // If we clicked on TOP ARROW - RELATION
-                if ((x >= LeftTop.X + (width / 2 - 5) && x <= LeftTop.X + (width / 2 + 15)) && (y >= LeftTop.Y - 25 && y <= LeftTop.Y - 5))
+                if ((x >= LeftTopWithOffset.X + (width / 2 - 5) && x <= LeftTopWithOffset.X + (width / 2 + 15)) && (y >= LeftTopWithOffset.Y - 25 && y <= LeftTopWithOffset.Y - 5))
                     return ClickType.RELATION;
 
                 // If we clicked on BOTTOM ARROW - RELATION
-                if ((x >= LeftTop.X + (width / 2 - 5) && x <= LeftTop.X + (width / 2 + 15)) && (y >= LeftTop.Y + height + 8 && y <= LeftTop.Y + height + 28))
+                if ((x >= LeftTopWithOffset.X + (width / 2 - 5) && x <= LeftTopWithOffset.X + (width / 2 + 15)) && (y >= LeftTopWithOffset.Y + height + 8 && y <= LeftTopWithOffset.Y + height + 28))
                     return ClickType.RELATION;
 
                 // If we clicked on LEFT ARROW - RELATION
-                if ((x >= LeftTop.X - 25 && x <= LeftTop.X - 5) && (y >= LeftTop.Y + (height / 2 - 10) && y <= LeftTop.Y + (height / 2 + 10)))
+                if ((x >= LeftTopWithOffset.X - 25 && x <= LeftTopWithOffset.X - 5) && (y >= LeftTopWithOffset.Y + (height / 2 - 10) && y <= LeftTopWithOffset.Y + (height / 2 + 10)))
                     return ClickType.RELATION;
 
                 // If we clicked on RIGHT ARROW - RELATION
-                if ((x >= LeftTop.X + width + 5 && x <= LeftTop.X + width + 25) && (y >= LeftTop.Y + (height / 2 - 10) && y <= LeftTop.Y + (height / 2 + 10)))
+                if ((x >= LeftTopWithOffset.X + width + 5 && x <= LeftTopWithOffset.X + width + 25) && (y >= LeftTopWithOffset.Y + (height / 2 - 10) && y <= LeftTopWithOffset.Y + (height / 2 + 10)))
                     return ClickType.RELATION;
             }
 
@@ -225,15 +228,6 @@ namespace UML_class_diagram.Classes {
         /// <param name="height">Width of the picture box</param>
         /// <returns>Return if we can move or not</returns>
         public override bool Move(int x, int y, int width, int height) {
-            if ((this.LeftTop.X + x) < 0)
-                return false;
-            if ((this.LeftTop.Y + y) < 0)
-                return false;
-            if ((this.LeftTop.X + this.width + x) > width - 3)
-                return false;
-            if ((this.LeftTop.Y + this.height + y) > height - 5)
-                return false;
-
             this.LeftTop.X += x;
             this.LeftTop.Y += y;
             return true;
