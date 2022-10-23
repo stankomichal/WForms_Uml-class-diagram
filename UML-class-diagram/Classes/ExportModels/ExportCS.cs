@@ -37,7 +37,7 @@ namespace UML_class_diagram.Classes.ExportModels {
                 foreach (var function in classModel.Functions) {
                     sw.WriteLine($"    {function.AccessMod.ToString().ToLower()} {function.Data.Type} {function.Data.Name} ({String.Join(", ", function.Arguments.Select(x => $"{x.Type} {x.Name}"))})");
                     sw.WriteLine("    {");
-                    sw.WriteLine("    throw new NotImplementedException();");
+                    sw.WriteLine("        throw new NotImplementedException();");
                     sw.WriteLine("    }");
 
                 }
